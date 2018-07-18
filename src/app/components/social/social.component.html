@@ -188,8 +188,8 @@
 
           <h1 style=" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);">Social</h1>
 
-          <div *ngIf="auth.author | async as author">
-          <a *ngIf="author.rol == 'admin'"  style="text-decoration: none;" href="#modal-full" uk-toggle (click)="posteado = false">
+        <div *ngIf="auth.author | async">
+          <a style="text-decoration: none;" href="#modal-full" uk-toggle (click)="posteado = false">
             <h1>
               <i class="icon ion-md-add" style="font-size: 75px; position: absolute; top: 0em; right: 1em;"></i>
             </h1>
