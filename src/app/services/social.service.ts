@@ -21,7 +21,7 @@ export class SocialService {
     private afs: AngularFirestore,
     private afAuth: AngularFireAuth
   ) { 
-    this.seed_collection = afs.collection<Seed>('seeds');
+    this.seed_collection = afs.collection<Seed>('seeds', ref => ref.orderBy('date', 'desc'));
   }
 
 

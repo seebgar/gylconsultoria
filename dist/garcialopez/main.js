@@ -1220,7 +1220,7 @@ var PublicationsService = /** @class */ (function () {
     function PublicationsService(afs, afAuth) {
         this.afs = afs;
         this.afAuth = afAuth;
-        this.publications_collection = afs.collection('publications');
+        this.publications_collection = afs.collection('publications', function (ref) { return ref.orderBy('date', 'desc'); });
     }
     /**
      * Returns an observable collection of Publications with their IDs
@@ -1321,7 +1321,7 @@ var SocialService = /** @class */ (function () {
     function SocialService(afs, afAuth) {
         this.afs = afs;
         this.afAuth = afAuth;
-        this.seed_collection = afs.collection('seeds');
+        this.seed_collection = afs.collection('seeds', function (ref) { return ref.orderBy('date', 'desc'); });
     }
     /**
      * Returns an observable collection of Seeds with their IDs

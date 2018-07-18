@@ -22,7 +22,7 @@ export class PublicationsService {
     private afs: AngularFirestore,
     private afAuth: AngularFireAuth
   ) {
-    this.publications_collection = afs.collection<Publication>('publications');
+    this.publications_collection = afs.collection<Publication>('publications', ref => ref.orderBy('date', 'desc'));
   }
 
 
