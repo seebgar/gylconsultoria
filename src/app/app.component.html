@@ -1,0 +1,59 @@
+<div class="uk-offcanvas-content" id="home_base">
+
+
+
+
+  <a class="uk-button" type="button" uk-toggle="target: #offcanvas-nav-primary" style="text-decoration: none;">
+    <i id="menu_icon" class="icon ion-md-menu" style="font-size: 55px; color: whitesmoke;"></i>
+  </a>
+
+
+
+
+
+  <router-outlet></router-outlet>
+
+
+
+
+
+
+  <div id="offcanvas-nav-primary" uk-offcanvas="mode: push; overlay: true">
+    <div class="uk-offcanvas-bar uk-flex uk-flex-column" style="height: 100vh; width: 100%;">
+
+      <ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+        <li class="uk-nav-header">MENU</li>
+        <li routerLink="/home" uk-toggle="target: #offcanvas-nav-primary">
+          <a>Inicio</a>
+        </li>
+        <li routerLink="/portafolio" uk-toggle="target: #offcanvas-nav-primary">
+          <a>Portafolio de Servicios</a>
+        </li>
+        <li routerLink="/asociados" href="#asociados" uk-toggle="target: #offcanvas-nav-primary">
+          <a>Asociados</a>
+        </li>
+
+        <li routerLink="/social" uk-toggle="target: #offcanvas-nav-primary">
+          <a>Social</a>
+        </li>
+        <li routerLink="/foro" href="#" uk-toggle="target: #offcanvas-nav-primary">
+          <a>Foro</a>
+        </li>
+
+        <li routerLink="/contacto" href="#" uk-toggle="target: #offcanvas-nav-primary">
+          <a>Contacto</a>
+        </li>
+      </ul>
+
+      <a class="uk-button" type="button" uk-toggle="target: #offcanvas-nav-primary" style="text-decoration: none;">
+        <i class="icon ion-md-close" style="font-size: 55px; color: whitesmoke;"></i>
+      </a>
+
+    </div>
+  </div>
+
+
+
+
+
+</div>

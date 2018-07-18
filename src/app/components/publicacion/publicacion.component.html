@@ -1,0 +1,364 @@
+<div style="position: absolute; top: 0; width: 100%; min-height: 100vh; overflow-x: hidden; background-color: whitesmoke">
+
+  <a class="uk-button" type="button" style="text-decoration: none;" routerLink="/foro">
+    <i id="menu_icon" class="icon ion-ios-arrow-back" style="font-size: 55px;"></i>
+  </a>
+
+
+
+
+  <div id="modal-post-post" uk-modal>
+    <div class="uk-modal-dialog">
+
+
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+
+      <div class="uk-modal-header">
+        <h2 *ngIf="!publicado_post" class="uk-modal-title">Crea una nueva entrada</h2>
+        <h2 *ngIf="publicado_post" class="uk-modal-title" style="color: rgb(31, 177, 61);">Publicado!</h2>
+      </div>
+
+      <div *ngIf="!publicado_post" class="uk-modal-body">
+        <form (ngSubmit)="onSubmit(postForm)" #postForm="ngForm">
+          <fieldset class="uk-fieldset">
+            <div class="uk-margin">
+              <input [(ngModel)]="pub_model.title" #title="ngModel" name="title" required minlength="1" [ngClass]="{'uk-form-danger': title.errors && title.touched}"
+                class="uk-input" type="text" placeholder="Un título interesante">
+            </div>
+            <div class="uk-margin">
+              <textarea [(ngModel)]="pub_model.text" #text="ngModel" name="text" required minlength="1" [ngClass]="{'uk-form-danger': text.errors && text.touched}"
+                class="uk-input" type="text" placeholder="Texto"></textarea>
+            </div>
+            <div class="uk-margin">
+              <select class="uk-select" [(ngModel)]="doc" #selection="ngModel" name="selection" required>
+                <option value="" selected disabled hidden>Tipo de documento</option>
+                <option value="na">Solo Texto</option>
+                <option value="img">Imagen</option>
+                <option value="pdf">Documento PDF</option>
+              </select>
+            </div>
+
+            <div class="uk-margin" [style.display]=" doc === 'na' ? 'none' : 'block' ">
+              <input [(ngModel)]="pub_model.image" #image="ngModel" name="image" [ngClass]="{'uk-form-danger': image.errors && image.touched}"
+                class="uk-input" type="text" [placeholder]=" doc === 'img' ? 'URL Imagen documento' : 'URL Documento PDF, se puede obtener al subir el archivo a Google Drive'">
+            </div>
+
+            <br/>
+            <hr/>
+            <div class="uk-margin uk-text-right">
+              <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+              <button type="submit" [disabled]="!postForm.form.valid" class="uk-button uk-button-primary">
+                Publicar
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+
+
+      <div *ngIf="publicado_post" class="uk-modal-body">
+        <div class="uk-margin uk-text-center">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Listo</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+  <div uk-grid>
+    <div class="uk-width-1-6@m"></div>
+    <div class="uk-width-expand@m">
+      <div style="position: relative;">
+
+
+
+        <h1 style=" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);">{{(publication | async)?.title}}</h1>
+
+        <div *ngIf="auth.author | async as author">
+          <a *ngIf="author.rol === 'admin'" (click)="publicado_post = false" href="#modal-post-post" uk-toggle>
+            <h1>
+              <i class="icon ion-md-add" style="font-size: 75px; position: absolute; top: 0em; right: 1em;"></i>
+            </h1>
+          </a>
+        </div>
+
+        <hr/>
+
+        <br/>
+        <br/>
+
+        <div uk-grid="masonry: true">
+
+          <div class="uk-width-1-2@m" style="position: relative;" *ngFor="let post of posts; let i = index">
+            <!--NG FOR-->
+
+            <div class="uk-card uk-card-default uk-card-hover ">
+
+
+              <span style="position: absolute; top: 8px; right: 8px;">
+                <h6 style="font-size: 12px">{{post.date | date}}</h6>
+              </span>
+              <a style="text-decoration: none;" href="#modal-full-{{i}}" uk-toggle>
+                <div class="uk-card-body">
+                  <h3 class="uk-card-title">{{post.title}}</h3>
+                </div>
+              </a>
+              <div class="uk-card-footer">
+
+
+
+                <div *ngIf="auth.author | async as author; else user">
+
+                  <div *ngIf="author.rol == 'admin'; else rol">
+                    <div uk-grid>
+                      <div class="uk-width-1-3@m">{{post.visits}} Visitas</div>
+                      <div class="uk-width-expand@m">{{post.comments.length}} Comentarios</div>
+                      <div class="uk-width-1-6@m uk-text-right">
+                        <a (click)="delete(i)">
+                          <i class="icon ion-md-trash" style="font-size: 25px;"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-template #rol>
+                    <div uk-grid>
+                      <div class="uk-width-1-2@m">{{post.visits}} &nbsp; Visitas</div>
+                      <div class="uk-width-1-2@m uk-text-right">{{post.comments.length}} &nbsp; Comentarios</div>
+                    </div>
+                  </ng-template>
+
+
+                </div>
+
+                <ng-template #user>
+                  <div uk-grid>
+                    <div class="uk-width-1-2@m">{{post.visits}} &nbsp; Visitas</div>
+                    <div class="uk-width-1-2@m uk-text-right">{{post.comments.length}} &nbsp; Comentarios</div>
+                  </div>
+                </ng-template>
+
+
+
+
+              </div>
+
+
+            </div>
+
+
+
+            <div id="modal-full-{{i}}" class="uk-modal-full" uk-modal>
+              <div class="uk-modal-dialog" style="min-height: 100vh;">
+
+
+                <div style="padding-top: 5em;">
+
+                  <a class="uk-modal-close-full uk-close-large" type="button" uk-close>
+                  </a>
+
+
+                  <div uk-grid>
+                    <div class="uk-width-1-6@m"></div>
+                    <div class="uk-width-expand@m">
+                      <div>
+
+
+
+                        <h1 style=" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);">{{post.title}}</h1>
+                        <hr/>
+
+                        <br/>
+                        <br/>
+
+                        <article class="uk-article">
+
+                          <h1 class="uk-article-title">
+                            <!-- <a class="uk-link-reset">Heading</a> -->
+                          </h1>
+
+                          <p class="uk-article-meta">Publicado por Carlos Humberto Garcia {{post.date}}
+                          </p>
+
+                          <p *ngIf="!editmode" class="uk-text-lead" style="white-space: pre-wrap;">
+                            {{post.text}}
+                          </p>
+
+
+
+                          <textarea *ngIf="editmode" class="uk-textarea" type="text" name="text" value="{{post.text}}" placeholder="{{post.text}}"
+                            [(ngModel)]="post.text" style="min-height: 400px;">
+                          </textarea>
+
+
+                          <div *ngIf="auth.author | async as author">
+
+                            <div *ngIf="author.rol == 'admin'" class="uk-margin uk-text-right">
+                              <h1>
+                                <a *ngIf="!editmode" style="text-decoration: none;" (click)="editmode = !editmode">
+                                  <i class="icon ion-md-create" style="font-size: 35px;"></i>
+                                </a>
+                                <a *ngIf="editmode" style="text-decoration: none; font-size: 18px" (click)="editmode = !editmode">
+                                  Cancelar
+                                </a> &nbsp;&nbsp;&nbsp;
+                                <a *ngIf="editmode" style="text-decoration: none; font-size: 18px" (click)="edit_post()">
+                                  Confirmar
+                                </a>
+                              </h1>
+                            </div>
+
+                          </div>
+
+
+
+                          <div *ngIf="post.type === 'pdf'">
+                            <embed [src]="post.pdf" width="800" height="1000px" />
+                          </div>
+
+                          <div *ngIf="post.type === 'img'">
+                            <img [src]="post.image" width="100%" height="auto">
+                          </div>
+
+
+                          <div class="uk-grid-small uk-child-width-auto" uk-grid>
+                            <div>
+                              <a class="uk-button uk-button-text">{{post.comments.length}} Comments</a>
+                            </div>
+                          </div>
+
+                        </article>
+
+                        <hr/>
+
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+
+
+
+                        <article class="uk-comment" *ngFor="let comment of post.comments">
+                          <div *ngIf="comment.text">
+                            <br/>
+                            <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+                              <div class="uk-width-auto">
+                                <img *ngIf="comment.author && comment.author.photoURL" class="uk-comment-avatar" src="{{comment.author.photoURL}}" width="80"
+                                  height="80" alt="">
+                                <img *ngIf="!comment.author" class="uk-comment-avatar" src="https://lh3.googleusercontent.com/u3GTJ9bMkzdhyymUto5QvVZpS8EER2D7tN_aOCDLiuQtAlPsWy8h-lO10XIr08Zo8lmIxQ2WVPUCcyJNxmlnQupsaZWZsMuDmn09GNhFOaKGMWra6OP18TU6WN5W6rrjS5-m7OcLQ4eJjHuGUlJm7p98pO8uPjw5UaFyvZ9mdctwnOm8dNVbogP9eQcuUoIYgI6hN20Vda4XwNhqURVX6c19PFWZ_ed77KKBs2tXeRCF9BKGcoHtFKzf6vwVDuhB5G9q0Hlg4dpX6RcfliRJ5oBk5XGzwI1F8GctVskTbNEG9sc-9OOqiA8rCuw7aa2M5U_IYDbi7kDBTrRYSqfD4OktzUu_zCqL8AvhHc0fzs-F6BPLqvB9Jv9p9XAvvmj--aHdlRcZf-nLQxMQJIn47OLBRPBRlNo62uXZlNTPWkpK8yqCREYd2GIQADyzH2aHtFAzcRmyShzegKnCGAdxuFR6rebL7phK9yK8ix4upyOw6BgMkNOKDmHiHZ9sMHtf9Y-W5kcLRZ34H2fe5yQeIwsYlZNvxvYfCeCO6eEHor99yZy7bQDGwb7U3U4SEp-eR9QM1MWnIoJDbV0wADrF4OS4afGEhHpXHEpuM-ek=w245-h244-no"
+                                  width="80" height="80" alt="">
+                              </div>
+                              <div class="uk-width-expand">
+                                <h4 class="uk-comment-title uk-margin-remove">
+                                  <a *ngIf="comment.author" class="uk-link-reset">{{comment.author.displayName}}</a>
+                                  <a *ngIf="!comment.author" class="uk-link-reset">Anonimo</a>
+                                </h4>
+                                <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+                                  <li>
+                                    <a>{{comment.date | date}}</a>
+                                  </li>
+                                </ul>
+                              </div>
+                            </header>
+                            <div class="uk-comment-body" style="white-space: pre-wrap;">
+                              <p>
+                                {{comment.text}}
+                              </p>
+                            </div>
+                            <hr/>
+                            <br/>
+                          </div>
+                        </article>
+
+
+
+                        <div *ngIf="auth.author | async; then authenticated else guest"></div>
+
+                        <ng-template #authenticated>
+                          <div class="uk-margin">
+                            <textarea [(ngModel)]="nuevo_comentario" name="nuevo" class="uk-textarea" rows="5" placeholder="Escribe un comentario..."></textarea>
+                          </div>
+
+                          <div class="uk-margin uk-text-right">
+                            <button (click)="post_comment(i)" class="uk-button uk-button-text" style="font-size: 18px; color: rgb(14, 112, 136);">Publicar</button>
+                          </div>
+                        </ng-template>
+
+
+                        <ng-template #guest>
+                          <div class="uk-margin">
+                            <a (click)="auth.google_login()">
+                              <h1 style=" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgb(167, 167, 167);">
+                                <i class="icon ion-logo-googleplus" style="font-size: 35px;"></i> &nbsp; Registrate para comentar
+                              </h1>
+                            </a>
+                          </div>
+                        </ng-template>
+
+
+
+
+
+
+                      </div>
+                    </div>
+                    <div class="uk-width-1-6@m"></div>
+                  </div>
+
+                  <div id="nbsp-inline">
+                    &nbsp;
+                  </div>
+
+                </div>
+
+
+
+
+
+
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+
+
+
+          <div *ngIf="!(publication | async)">
+            <h1 style=" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgba(167, 167, 167, 0.534);">Cragando...</h1>
+          </div>
+
+        </div>
+
+
+      </div>
+    </div>
+    <div class="uk-width-1-6@m"></div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+  <div id="nbsp-inline">
+    &nbsp;
+  </div>
+
+
+
+
+</div>

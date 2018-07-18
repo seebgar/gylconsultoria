@@ -1,0 +1,344 @@
+<div style="position: absolute; top: 0; width: 100%; min-height: 100vh; overflow-x: hidden; background-color: whitesmoke">
+
+  <div class="uk-offcanvas-content">
+    <a class="uk-button" type="button" uk-toggle="target: #offcanvas-nav-primary-social" style="text-decoration: none;">
+      <i id="menu_icon" class="icon ion-md-menu" style="font-size: 55px;"></i>
+    </a>
+
+
+    <div id="offcanvas-nav-primary-social" uk-offcanvas="mode: push; overlay: true">
+      <div class="uk-offcanvas-bar uk-flex uk-flex-column" style="height: 100vh; width: 100%;">
+
+        <ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+          <li class="uk-nav-header">MENU</li>
+          <li routerLink="/home" uk-toggle="target: #offcanvas-nav-primary-social">
+            <a>Inicio</a>
+          </li>
+          <li routerLink="/portafolio" uk-toggle="target: #offcanvas-nav-primary-social">
+            <a>Portafolio de Servicios</a>
+          </li>
+          <li routerLink="/asociados" href="#asociados" uk-toggle="target: #offcanvas-nav-primary-social">
+            <a>Asociados</a>
+          </li>
+
+          <li routerLink="/social" uk-toggle="target: #offcanvas-nav-primary-social">
+            <a>Social</a>
+          </li>
+          <li routerLink="/foro" href="#" uk-toggle="target: #offcanvas-nav-primary-social">
+            <a>Foro</a>
+          </li>
+
+          <li routerLink="/contacto" href="#" uk-toggle="target: #offcanvas-nav-primary-social">
+            <a>Contacto</a>
+          </li>
+        </ul>
+
+        <a class="uk-button" type="button" uk-toggle="target: #offcanvas-nav-primary-social" style="text-decoration: none;">
+          <i class="icon ion-md-close" style="font-size: 55px; color: whitesmoke;"></i>
+        </a>
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <div id="modal-full" class="uk-modal-full" uk-modal>
+      <div class="uk-modal-dialog" style="height: 100vh; width: 100%;">
+        <div style="padding-top: 5em;">
+          <a class="uk-modal-close-full uk-close-large" type="button" uk-close>
+          </a>
+          <div uk-grid>
+            <div class="uk-width-1-4@m"></div>
+            <div class="uk-width-expand@m">
+
+
+              <div class="uk-card">
+                <div class="uk-card-header" style="margin-bottom: -1em">
+                  <h2 *ngIf="!posteado" class="uk-modal-title">Post</h2>
+                  <h2 *ngIf="posteado" class="uk-modal-title" style="color: rgb(31, 177, 61);">Publicado!</h2>
+                </div>
+
+                <div *ngIf="!posteado" class="uk-card-body" style="margin-top: -1em;">
+
+                  <form (ngSubmit)="onSubmit(seedForm)" #seedForm="ngForm">
+                    <fieldset class="uk-fieldset">
+                      <div class="uk-margin">
+                        <input class="uk-input" type="text" name="title" required minlength="3" placeholder="Un título interesante" [(ngModel)]="model_seed.title"
+                          #title="ngModel" [ngClass]="{'uk-form-danger': title.errors && title.touched}">
+                      </div>
+                      <div class="uk-margin">
+                        <textarea class="uk-textarea" name="text" placeholder="Texto (opcional)" [(ngModel)]="model_seed.text" #text="ngModel"></textarea>
+                      </div>
+                      <div class="uk-margin">
+                        <input class="uk-input" type="text" name="image" placeholder="URL Imagen (opcional)" [(ngModel)]="model_seed.image" #image="ngModel">
+                      </div>
+
+                      <br/>
+                      <hr/>
+                      <div class="uk-margin uk-text-right">
+                        <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+                        <button type="submit" [disabled]="!seedForm.form.valid" class="uk-button uk-button-primary">
+                          Confirmar
+                        </button>
+                      </div>
+                    </fieldset>
+                  </form>
+
+                </div>
+
+
+                <div *ngIf="posteado" class="uk-card-body">
+                  <div class="uk-margin uk-text-center">
+                    <button class="uk-button uk-button-default uk-modal-close" type="button">Listo</button>
+                  </div>
+                </div>
+
+              </div>
+
+
+            </div>
+            <div class="uk-width-1-4@m"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+    <div *ngIf="auth.author | async; then authenticated else guest">
+      
+    </div>
+
+      <ng-template #authenticated>
+        <div *ngIf="auth.author | async as author" class="uk-text-middle" style="float: right; min-width: 350px; margin-top: 2em;">
+
+            <div class="uk-grid-small uk-text-middle" uk-grid>
+              
+                <div class="uk-width-expand@s uk-text-middle uk-margin-top">
+                    <p>{{author.displayName}}</p>
+                </div>
+
+                <div class="uk-width-1-2@s uk-text-middle">
+                    <img class="uk-comment-avatar" src="{{author.photoURL}}" width="60" height="auto" alt="">
+                </div>
+
+              </div>
+
+              <button (click)="auth.logout()" class="uk-button uk-button-text" style="margin-top: -1em;">Salir</button>
+
+        </div> 
+      </ng-template>
+
+
+
+
+      <ng-template #guest>
+          <div class="uk-text-middle" style="float: right; min-width: 350px; margin-top: 2em;">
+              <div class="uk-margin">
+                  <a (click)="auth.google_login(); intenta_votar = false;" style="text-decoration: none">
+                    <h1 style=" font-family: 'Roboto'; font-size: 18px; font-weight: 300; color: rgb(167, 167, 167);">
+                      <i class="icon ion-logo-googleplus" style="font-size: 30px;"></i> &nbsp; Inicia sesión
+                    </h1>
+                  </a>
+                </div>
+          </div>
+      </ng-template>
+
+
+
+
+
+
+
+
+
+
+
+    <div uk-grid>
+      <div class="uk-width-1-3@m"></div>
+      <div class="uk-width-1-3@m">
+        <div id="logo_black"></div>
+      </div>
+      <div class="uk-width-1-3@m"></div>
+    </div>
+
+
+
+
+
+
+    <div uk-grid>
+      <div class="uk-width-1-6@m"></div>
+      <div class="uk-width-expand@m">
+        <div style="position: relative;">
+
+
+
+
+
+          <h1 style=" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);">Social</h1>
+
+          <div *ngIf="auth.author | async as author">
+          <a *ngIf="author.rol == 'admin'"  style="text-decoration: none;" href="#modal-full" uk-toggle (click)="posteado = false">
+            <h1>
+              <i class="icon ion-md-add" style="font-size: 75px; position: absolute; top: 0em; right: 1em;"></i>
+            </h1>
+          </a>
+        </div>
+
+          <hr/>
+
+          <br/>
+          <br/>
+
+          <div uk-grid>
+
+
+            <div class="uk-width-1-1" *ngFor="let seed of seeds | async; let i = index">
+
+
+
+              <article class="uk-comment uk-comment-primary" style="padding-left: 5em; position: relative;  background-color: white; border-radius: 0.5em;">
+
+
+                <div *ngIf="auth.author | async; then authenticated else guest"></div>
+
+                <ng-template #authenticated>
+                  <div *ngIf="auth.author | async as author">
+                    <span *ngIf="author.rol == 'admin'" (click)="delete(seed.id)" style="font-size: 35px; position: absolute; top: 25px; right: 25px;"
+                      uk-icon="icon: minus-circle; ratio: 1.5"></span>
+                  </div>
+
+                  <i (click)="seed.ups = seed.ups + 1; update(seed)" class="icon ion-ios-arrow-up" style="font-size: 35px; position: absolute; top: 15px; left: 15px;"></i>
+
+                  <p style="font-size: 18px; position: absolute; top: 35px; left: 20px;">{{seed.ups}}</p>
+
+                  <i (click)="seed.ups = seed.ups - 1; update(seed)" class="icon ion-ios-arrow-down" style="font-size: 35px; position: absolute; top: 75px; left: 15px;"></i>
+                </ng-template>
+
+
+                <ng-template #guest>
+                  <div *ngIf="intenta_votar">
+                    <a (click)="auth.google_login()">
+                      <h1 style=" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgb(167, 167, 167);">
+                        <i class="icon ion-logo-googleplus" style="font-size: 35px;"></i> &nbsp; Registrate para votar
+                      </h1>
+                    </a>
+                  </div>
+                  <i (click)="update(seed)" class="icon ion-ios-arrow-up" style="font-size: 35px; position: absolute; top: 15px; left: 15px;"></i>
+                  <p style="font-size: 18px; position: absolute; top: 35px; left: 20px;">{{seed.ups}}</p>
+                  <i (click)="update(seed)" class="icon ion-ios-arrow-down" style="font-size: 35px; position: absolute; top: 75px; left: 15px;"></i>
+                </ng-template>
+
+
+
+
+
+
+
+
+                <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+                  <div class="uk-width-auto">
+                    <img class="uk-comment-avatar" [src]="seed.author_image" width="80" height="80" alt="">
+                  </div>
+                  <div class="uk-width-expand">
+                    <h4 class="uk-comment-title uk-margin-remove">
+                      <a class="uk-link-reset">{{seed.author}}</a>
+                    </h4>
+                    <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+                      <li>
+                        <a>{{seed.date | date}}</a>
+                      </li>
+                      <li>
+                        <a routerLink="/social/posts/{{seed.id}}">{{seed.replies.length}} &nbsp; Comentarios</a>
+                      </li>
+                    </ul>
+                  </div>
+                </header>
+
+
+                <div class="uk-comment-body">
+                  <p>
+                    {{seed.title}}
+                  </p>
+
+                  <img *ngIf="seed.image != '' && seed.image " [src]="seed.image" height="auto" width="100%">
+
+                </div>
+
+
+              </article>
+
+
+
+
+
+            </div>
+
+
+            <div *ngIf="!(seeds | async)">
+              Cargando...
+            </div>
+
+
+
+
+          </div>
+
+
+        </div>
+      </div>
+      <div class="uk-width-1-6@m"></div>
+    </div>
+
+
+
+
+
+
+    <div id="nbsp-inline">
+      &nbsp;
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+</div>

@@ -1,0 +1,123 @@
+<div style="background-color: whitesmoke; position: absolute; top: 0; right: 0; width: 100%; min-height: 100vh;">
+
+
+  <a class="uk-button" type="button" style="text-decoration: none;" (click)="go_back()">
+    <i id="menu_icon" class="icon ion-ios-arrow-back" style="font-size: 55px;"></i>
+  </a>
+
+
+  <div class="uk-container">
+
+
+
+
+    <article class="uk-comment uk-comment-primary" style="padding-left: 5em; position: relative;  background-color: white; border-radius: 0.5em;">
+
+      <i (click)="seed.ups = seed.ups + 1; update()" class="icon ion-ios-arrow-up" style="font-size: 35px; position: absolute; top: 15px; left: 15px;"></i>
+
+      <p style="font-size: 18px; position: absolute; top: 35px; left: 20px;">{{(seed | async)?.ups}}</p>
+
+      <i (click)="seed.ups = seed.ups - 1; update()" class="icon ion-ios-arrow-down" style="font-size: 35px; position: absolute; top: 75px; left: 15px;"></i>
+
+      <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+        <div class="uk-width-auto">
+          <img class="uk-comment-avatar" src="{{(seed | async)?.author_image}}" width="80" height="80" alt="">
+        </div>
+        <div class="uk-width-expand">
+          <h4 class="uk-comment-title uk-margin-remove">
+            <a class="uk-link-reset" href="#">{{(seed | async)?.author}}</a>
+          </h4>
+          <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+            <li>
+              <a>{{(seed | async)?.date | date}}</a>
+            </li>
+
+          </ul>
+        </div>
+      </header>
+      <div class="uk-comment-body">
+        <p>
+          {{(seed | async)?.title}}
+        </p>
+
+        <p style="font-size: 18px;">
+          {{(seed | async)?.text}}
+        </p>
+
+        <img *ngIf="seed.image != '' && seed.image " [src]="seed.image" height="auto" width="100%">
+
+      </div>
+      <hr/>
+      <br/>
+    </article>
+
+
+    <div *ngIf="auth.author | async; then authenticated else guest"></div>
+
+    <ng-template #authenticated>
+      <div class="uk-margin">
+        <textarea [(ngModel)]="new_reply" name="nuevo" class="uk-textarea" rows="5" placeholder="Escribe un comentario..."></textarea>
+      </div>
+
+      <div class="uk-margin uk-text-right">
+        <button (click)="reply()" class="uk-button uk-button-text" style="font-size: 18px; color: rgb(14, 112, 136);">Comentar</button>
+      </div>
+    </ng-template>
+
+
+    <ng-template #guest>
+     <div class="uk-margin">
+      <a (click)="auth.google_login()">
+        <h1 style=" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgb(167, 167, 167);">
+            <i class="icon ion-logo-googleplus" style="font-size: 35px;"></i> &nbsp;
+            Registrate para comentar
+        </h1>
+      </a>
+    </div>
+    </ng-template>
+
+
+
+
+
+
+
+
+    <article class="uk-comment" *ngFor="let comment of replies">
+      <div *ngIf="comment.text">
+        <br/>
+        <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+
+          <div class="uk-width-expand">
+            <h4 class="uk-comment-title uk-margin-remove">
+              <a class="uk-link-reset">Author</a>
+            </h4>
+            <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+              <li>
+                <a>{{comment.date | date}}</a>
+              </li>
+            </ul>
+          </div>
+        </header>
+        <div class="uk-comment-body" style="white-space: pre-wrap;">
+          <p style="font-size: 18px;">
+            {{comment.text}}
+          </p>
+        </div>
+        <hr/>
+        <br/>
+      </div>
+    </article>
+
+
+
+
+
+
+  </div>
+
+
+
+
+
+</div>
