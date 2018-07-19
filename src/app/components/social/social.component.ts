@@ -70,7 +70,9 @@ export class SocialComponent implements OnInit {
       this.social_servicce.post_seed(value);
       this.posteado = !this.posteado;
       this.form.reset();
+      this.paths = [];
     }
+    this.paths = [];
   }
 
   receptor($event) {

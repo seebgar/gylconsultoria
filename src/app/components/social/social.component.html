@@ -199,29 +199,30 @@
                 <img *ngIf="seed.image != '' && seed.image " [src]="seed.image" height="auto" width="100%">
 
 
-
-                <div *ngIf="seed.photoURL">
+                <div *ngIf="!seed.image">
+                  <div *ngIf="seed.photoURL">
 
 
                     <div class="uk-position-relative uk-visible-toggle uk-dark" uk-slideshow>
 
-                        <ul class="uk-slideshow-items">
-                            <li *ngFor="let im of seed.photoURL">
-                                <img data-src="{{im | urlpipe | async}}" width="1800" height="1200" alt="" uk-cover uk-img="target: !ul > :last-child, !* +*">
-                            </li>
-                            
-                        </ul>
-                    
-                        <a class="uk-position-center-left uk-padding" href="#" uk-slideshow-item="previous">
-                            <i class="icon ion-ios-arrow-back" style="font-size: 45px;"></i>
-                        </a>
-                        <a class="uk-position-center-right uk-padding" href="#" uk-slideshow-item="next">
-                            <i class="icon ion-ios-arrow-forward" style="font-size: 45px;"></i>
-                        </a>
-                    
+                      <ul class="uk-slideshow-items">
+                        <li *ngFor="let im of seed.photoURL">
+                          <img data-src="{{im | urlpipe | async}}" width="1800" height="1200" alt="" uk-cover uk-img="target: !ul > :last-child, !* +*">
+                        </li>
+
+                      </ul>
+
+                      <a class="uk-position-center-left uk-padding" href="#" uk-slideshow-item="previous">
+                        <i class="icon ion-ios-arrow-back" style="font-size: 45px;"></i>
+                      </a>
+                      <a class="uk-position-center-right uk-padding" href="#" uk-slideshow-item="next">
+                        <i class="icon ion-ios-arrow-forward" style="font-size: 45px;"></i>
+                      </a>
+
                     </div>
 
 
+                  </div>
                 </div>
 
 
