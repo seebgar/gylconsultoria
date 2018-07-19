@@ -3,8 +3,8 @@
 
 
 
-  <a class="uk-button" type="button" uk-toggle="target: #offcanvas-nav-primary" style="text-decoration: none;">
-    <i id="menu_icon" class="icon ion-md-menu" style="font-size: 55px; color: whitesmoke;"></i>
+  <a class="uk-button uk-margin-top" type="button" uk-toggle="target: #offcanvas-nav-primary" style="text-decoration: none; position: fixed; z-index: 100;">
+    <i id="menu_icon" class="icon ion-md-menu" style="font-size: 65px; color: white;"></i>
   </a>
 
 
@@ -22,6 +22,36 @@
     <div class="uk-offcanvas-bar uk-flex uk-flex-column" style="height: 100vh; width: 100%;">
 
       <ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+
+        <li *ngIf="auth.author | async; then authenticated else guest">
+
+        </li>
+
+        <ng-template #authenticated>
+          <div *ngIf="auth.author | async as author">
+            <p>{{author.displayName}}</p>
+            <img class="uk-comment-avatar" style="margin-top: -1em;" src="{{author.photoURL}}" width="60" height="auto" alt="">
+            <br/>
+            <button (click)="auth.logout()" class="uk-button uk-button-text" style="margin-top: -1em;">Salir</button>
+            <br/>
+          </div>
+        </ng-template>
+
+
+        <ng-template #guest>
+          <div class="uk-margin">
+            <a (click)="auth.google_login(); intenta_votar = false;" style="text-decoration: none">
+              <h1 style=" font-family: 'Roboto'; font-size: 18px; font-weight: 300; color: rgb(167, 167, 167);">
+                <i class="icon ion-logo-googleplus" style="font-size: 30px;"></i> &nbsp; Inicia sesión
+              </h1>
+            </a>
+          </div>
+        </ng-template>
+
+
+        <li class="uk-nav-divider"></li>
+        
+
         <li class="uk-nav-header">MENU</li>
         <li routerLink="/home" uk-toggle="target: #offcanvas-nav-primary">
           <a>Inicio</a>
