@@ -6,6 +6,7 @@ import { Seed } from '../../DTOS/seed';
 import { Observable, of } from 'rxjs';
 import { AuthorsService } from '../../services/authors.service';
 import { Author } from '../../DTOS/author';
+import { AngularFireStorage } from '../../../../node_modules/angularfire2/storage';
 
 @Component({
   selector: 'app-social',
@@ -22,13 +23,16 @@ export class SocialComponent implements OnInit {
   intenta_votar: boolean;
   admin: boolean;
 
+  paths: string[];
+
   private arturito: Author;
 
   constructor(
     private social_servicce: SocialService,
     private route: ActivatedRoute,
     private location: Location,
-    public auth: AuthorsService
+    public auth: AuthorsService,
+    private storage: AngularFireStorage
   ) {
     if (this.auth.author) {
       this.auth.author.subscribe(ar => {
@@ -57,10 +61,20 @@ export class SocialComponent implements OnInit {
       value.date = '' + new Date().toLocaleString();
       value.replies = [];
       value.ups = 0;
+      value.photoURL = [];
+      this.paths.forEach( x => {
+        if ( x !== undefined) {
+          value.photoURL.push(x);
+        }
+      });
       this.social_servicce.post_seed(value);
       this.posteado = !this.posteado;
       this.form.reset();
     }
+  }
+
+  receptor($event) {
+    this.paths = $event;
   }
 
   update(x: Seed): void {

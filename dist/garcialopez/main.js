@@ -190,12 +190,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_publications_service__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./services/publications.service */ "./src/app/services/publications.service.ts");
 /* harmony import */ var _services_social_service__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./services/social.service */ "./src/app/services/social.service.ts");
 /* harmony import */ var _components_seed_seed_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./components/seed/seed.component */ "./src/app/components/seed/seed.component.ts");
+/* harmony import */ var _directives_drop_zone_directive__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ./directives/drop-zone.directive */ "./src/app/directives/drop-zone.directive.ts");
+/* harmony import */ var _components_file_upload_file_upload_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./components/file-upload/file-upload.component */ "./src/app/components/file-upload/file-upload.component.ts");
+/* harmony import */ var _pipes_file_size_pipe__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./pipes/file-size.pipe */ "./src/app/pipes/file-size.pipe.ts");
+/* harmony import */ var _pipes_urlpipe_pipe__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ./pipes/urlpipe.pipe */ "./src/app/pipes/urlpipe.pipe.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
+
+
 
 
 
@@ -235,7 +243,11 @@ var AppModule = /** @class */ (function () {
                 _components_foro_foro_component__WEBPACK_IMPORTED_MODULE_17__["ForoComponent"],
                 _components_publicacion_publicacion_component__WEBPACK_IMPORTED_MODULE_18__["PublicacionComponent"],
                 _components_social_social_component__WEBPACK_IMPORTED_MODULE_19__["SocialComponent"],
-                _components_seed_seed_component__WEBPACK_IMPORTED_MODULE_23__["SeedComponent"]
+                _components_seed_seed_component__WEBPACK_IMPORTED_MODULE_23__["SeedComponent"],
+                _directives_drop_zone_directive__WEBPACK_IMPORTED_MODULE_24__["DropZoneDirective"],
+                _components_file_upload_file_upload_component__WEBPACK_IMPORTED_MODULE_25__["FileUploadComponent"],
+                _pipes_file_size_pipe__WEBPACK_IMPORTED_MODULE_26__["FileSizePipe"],
+                _pipes_urlpipe_pipe__WEBPACK_IMPORTED_MODULE_27__["UrlpipePipe"]
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
@@ -257,6 +269,137 @@ var AppModule = /** @class */ (function () {
         })
     ], AppModule);
     return AppModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/components/file-upload/file-upload.component.css":
+/*!******************************************************************!*\
+  !*** ./src/app/components/file-upload/file-upload.component.css ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = ".dropzone {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  flex-direction: column;\n  height: 300px;\n  border: 2px dashed teal;\n  border-radius: 5px;\n  background: white;\n  margin: 10px 0;\n}\n\n.dropzone:hover {\n  border: 2px solid teal;\n  color: #dadada !important;\n}\n\nprogress::-webkit-progress-value {\n  transition: width 0.1s ease;\n}\n"
+
+/***/ }),
+
+/***/ "./src/app/components/file-upload/file-upload.component.html":
+/*!*******************************************************************!*\
+  !*** ./src/app/components/file-upload/file-upload.component.html ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"dropzone\" \n     dropZone\n     (hovered)=\"toggleHover($event)\"\n     (dropped)=\"startUpload($event)\"\n     [class.hovering]=\"isHovering\">\n\n\n     <h3>Arrastra una imagen y sueltala aquí</h3>\n\n     <div class=\"file\">\n        <label class=\"file-label\">\n          Sólo si no tienes el URL de la imagen\n        <input class=\"file-input\" type=\"file\" (change)=\"startUpload($event.target.files)\">\n\n        </label>\n      </div>\n\n</div>\n\n<div *ngIf=\"percentage | async as pct\">\n\n  <progress class=\"progress is-info\" \n            [value]=\"pct\" \n            max=\"100\">        \n  </progress>\n\n  {{ pct | number }}%\n\n</div>\n\n\n<div *ngIf=\"snapshot | async as snap\">\n  {{ snap.bytesTransferred | fileSize }} de {{ snap.totalBytes | fileSize }} \n\n  <!-- <div *ngIf=\"downloadURL | async as url\">\n    <h3>Results!</h3>\n    <img [src]=\"url\"><br>\n    <a [href]=\"url\" target=\"_blank\" rel=\"noopener\">Download Me!</a>\n  </div> \n-->\n\n</div>"
+
+/***/ }),
+
+/***/ "./src/app/components/file-upload/file-upload.component.ts":
+/*!*****************************************************************!*\
+  !*** ./src/app/components/file-upload/file-upload.component.ts ***!
+  \*****************************************************************/
+/*! exports provided: FileUploadComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FileUploadComponent", function() { return FileUploadComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var angularfire2_storage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! angularfire2/storage */ "./node_modules/angularfire2/storage/index.js");
+/* harmony import */ var _node_modules_angularfire2_firestore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/angularfire2/firestore */ "./node_modules/angularfire2/firestore/index.js");
+/* harmony import */ var _services_authors_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/authors.service */ "./src/app/services/authors.service.ts");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+//selector: 'app-file-upload',
+var FileUploadComponent = /** @class */ (function () {
+    function FileUploadComponent(storage, afs, auth) {
+        var _this = this;
+        this.storage = storage;
+        this.afs = afs;
+        this.auth = auth;
+        this.pathsEvent = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        this.paths = [];
+        if (this.auth.author) {
+            this.auth.author.subscribe(function (ar) {
+                _this.arturito = ar;
+            });
+        }
+    }
+    FileUploadComponent.prototype.toggleHover = function (event) {
+        this.isHovering = event;
+    };
+    /**
+     * Uploads an image to Firebase Stogae and returns the PATH to the location
+     * of the image
+     * @param event Image to be updated
+     */
+    FileUploadComponent.prototype.startUpload = function (event) {
+        this.paths = [];
+        // The File object
+        var x = 0;
+        var paths = [];
+        while (x < event.length) {
+            var file = event.item(x);
+            // Client-side validation example
+            if (file.type.split('/')[0] !== 'image') {
+                console.error('unsupported file type :( ');
+                continue;
+            }
+            // The storage path
+            var date = new Date().getTime();
+            var name_1 = date + "_SOCIAL_" + file.name;
+            var path = "images/" + name_1;
+            // Totally optional metadata
+            var customMetadata = { app: 'G&L-Social' };
+            // The main task
+            this.task = this.storage.upload(path, file, { customMetadata: customMetadata });
+            // Progress monitoring
+            this.percentage = this.task.percentageChanges();
+            // ENLACE CON DATABASE,con pipe
+            this.snapshot = this.task.snapshotChanges();
+            // The file's download URL -this.task.downloadURL();
+            paths.push(path);
+            x++;
+        }
+        this.paths = paths;
+        this.get_paths();
+    };
+    FileUploadComponent.prototype.get_paths = function () {
+        this.pathsEvent.emit(this.paths);
+    };
+    // Determines if the upload task is active
+    FileUploadComponent.prototype.isActive = function (snapshot) {
+        return snapshot.state === 'running' && snapshot.bytesTransferred < snapshot.totalBytes;
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", Object)
+    ], FileUploadComponent.prototype, "pathsEvent", void 0);
+    FileUploadComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            selector: 'file-upload',
+            template: __webpack_require__(/*! ./file-upload.component.html */ "./src/app/components/file-upload/file-upload.component.html"),
+            styles: [__webpack_require__(/*! ./file-upload.component.css */ "./src/app/components/file-upload/file-upload.component.css")]
+        }),
+        __metadata("design:paramtypes", [angularfire2_storage__WEBPACK_IMPORTED_MODULE_1__["AngularFireStorage"],
+            _node_modules_angularfire2_firestore__WEBPACK_IMPORTED_MODULE_2__["AngularFirestore"],
+            _services_authors_service__WEBPACK_IMPORTED_MODULE_3__["AuthorsService"]])
+    ], FileUploadComponent);
+    return FileUploadComponent;
 }());
 
 
@@ -704,7 +847,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"position: absolute; top: 0; width: 100%; min-height: 100vh; overflow-x: hidden; background-color: whitesmoke\">\n\n  <a class=\"uk-button\" type=\"button\" style=\"text-decoration: none;\" routerLink=\"/foro\">\n    <i id=\"menu_icon\" class=\"icon ion-ios-arrow-back\" style=\"font-size: 55px;\"></i>\n  </a>\n\n\n\n\n  <div id=\"modal-post-post\" uk-modal>\n    <div class=\"uk-modal-dialog\">\n\n\n      <button class=\"uk-modal-close-default\" type=\"button\" uk-close></button>\n\n      <div class=\"uk-modal-header\">\n        <h2 *ngIf=\"!publicado_post\" class=\"uk-modal-title\">Crea una nueva entrada</h2>\n        <h2 *ngIf=\"publicado_post\" class=\"uk-modal-title\" style=\"color: rgb(31, 177, 61);\">Publicado!</h2>\n      </div>\n\n      <div *ngIf=\"!publicado_post\" class=\"uk-modal-body\">\n        <form (ngSubmit)=\"onSubmit(postForm)\" #postForm=\"ngForm\">\n          <fieldset class=\"uk-fieldset\">\n            <div class=\"uk-margin\">\n              <input [(ngModel)]=\"pub_model.title\" #title=\"ngModel\" name=\"title\" required minlength=\"1\" [ngClass]=\"{'uk-form-danger': title.errors && title.touched}\"\n                class=\"uk-input\" type=\"text\" placeholder=\"Un título interesante\">\n            </div>\n            <div class=\"uk-margin\">\n              <textarea [(ngModel)]=\"pub_model.text\" #text=\"ngModel\" name=\"text\" required minlength=\"1\" [ngClass]=\"{'uk-form-danger': text.errors && text.touched}\"\n                class=\"uk-input\" type=\"text\" placeholder=\"Texto\"></textarea>\n            </div>\n            <div class=\"uk-margin\">\n              <select class=\"uk-select\" [(ngModel)]=\"doc\" #selection=\"ngModel\" name=\"selection\" required>\n                <option value=\"\" selected disabled hidden>Tipo de documento</option>\n                <option value=\"na\">Solo Texto</option>\n                <option value=\"img\">Imagen</option>\n                <option value=\"pdf\">Documento PDF</option>\n              </select>\n            </div>\n\n            <div class=\"uk-margin\" [style.display]=\" doc === 'na' ? 'none' : 'block' \">\n              <input [(ngModel)]=\"pub_model.image\" #image=\"ngModel\" name=\"image\" [ngClass]=\"{'uk-form-danger': image.errors && image.touched}\"\n                class=\"uk-input\" type=\"text\" [placeholder]=\" doc === 'img' ? 'URL Imagen documento' : 'URL Documento PDF, se puede obtener al subir el archivo a Google Drive'\">\n            </div>\n\n            <br/>\n            <hr/>\n            <div class=\"uk-margin uk-text-right\">\n              <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">Cancelar</button>\n              <button type=\"submit\" [disabled]=\"!postForm.form.valid\" class=\"uk-button uk-button-primary\">\n                Publicar\n              </button>\n            </div>\n          </fieldset>\n        </form>\n      </div>\n\n\n      <div *ngIf=\"publicado_post\" class=\"uk-modal-body\">\n        <div class=\"uk-margin uk-text-center\">\n          <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">Listo</button>\n        </div>\n      </div>\n\n    </div>\n  </div>\n\n\n\n\n\n\n\n  <div uk-grid>\n    <div class=\"uk-width-1-6@m\"></div>\n    <div class=\"uk-width-expand@m\">\n      <div style=\"position: relative;\">\n\n\n\n        <h1 style=\" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);\">{{(publication | async)?.title}}</h1>\n\n        <div *ngIf=\"auth.author | async as author\">\n          <a *ngIf=\"author.rol === 'admin'\" (click)=\"publicado_post = false\" href=\"#modal-post-post\" uk-toggle>\n            <h1>\n              <i class=\"icon ion-md-add\" style=\"font-size: 75px; position: absolute; top: 0em; right: 1em;\"></i>\n            </h1>\n          </a>\n        </div>\n\n        <hr/>\n\n        <br/>\n        <br/>\n\n        <div uk-grid=\"masonry: true\">\n\n          <div class=\"uk-width-1-2@m\" style=\"position: relative;\" *ngFor=\"let post of posts; let i = index\">\n            <!--NG FOR-->\n\n            <div class=\"uk-card uk-card-default uk-card-hover \">\n\n\n              <span style=\"position: absolute; top: 8px; right: 8px;\">\n                <h6 style=\"font-size: 12px\">{{post.date | date}}</h6>\n              </span>\n              <a style=\"text-decoration: none;\" href=\"#modal-full-{{i}}\" uk-toggle>\n                <div class=\"uk-card-body\">\n                  <h3 class=\"uk-card-title\">{{post.title}}</h3>\n                </div>\n              </a>\n              <div class=\"uk-card-footer\">\n\n\n\n                <div *ngIf=\"auth.author | async as author; else user\">\n\n                  <div *ngIf=\"author.rol == 'admin'; else rol\">\n                    <div uk-grid>\n                      <div class=\"uk-width-1-3@m\">{{post.visits}} Visitas</div>\n                      <div class=\"uk-width-expand@m\">{{post.comments.length}} Comentarios</div>\n                      <div class=\"uk-width-1-6@m uk-text-right\">\n                        <a (click)=\"delete(i)\">\n                          <i class=\"icon ion-md-trash\" style=\"font-size: 25px;\"></i>\n                        </a>\n                      </div>\n                    </div>\n                  </div>\n                  <ng-template #rol>\n                    <div uk-grid>\n                      <div class=\"uk-width-1-2@m\">{{post.visits}} &nbsp; Visitas</div>\n                      <div class=\"uk-width-1-2@m uk-text-right\">{{post.comments.length}} &nbsp; Comentarios</div>\n                    </div>\n                  </ng-template>\n\n\n                </div>\n\n                <ng-template #user>\n                  <div uk-grid>\n                    <div class=\"uk-width-1-2@m\">{{post.visits}} &nbsp; Visitas</div>\n                    <div class=\"uk-width-1-2@m uk-text-right\">{{post.comments.length}} &nbsp; Comentarios</div>\n                  </div>\n                </ng-template>\n\n\n\n\n              </div>\n\n\n            </div>\n\n\n\n            <div id=\"modal-full-{{i}}\" class=\"uk-modal-full\" uk-modal>\n              <div class=\"uk-modal-dialog\" style=\"min-height: 100vh;\">\n\n\n                <div style=\"padding-top: 5em;\">\n\n                  <a class=\"uk-modal-close-full uk-close-large\" type=\"button\" uk-close>\n                  </a>\n\n\n                  <div uk-grid>\n                    <div class=\"uk-width-1-6@m\"></div>\n                    <div class=\"uk-width-expand@m\">\n                      <div>\n\n\n\n                        <h1 style=\" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);\">{{post.title}}</h1>\n                        <hr/>\n\n                        <br/>\n                        <br/>\n\n                        <article class=\"uk-article\">\n\n                          <h1 class=\"uk-article-title\">\n                            <!-- <a class=\"uk-link-reset\">Heading</a> -->\n                          </h1>\n\n                          <p class=\"uk-article-meta\">Publicado por Carlos Humberto Garcia {{post.date}}\n                          </p>\n\n                          <p *ngIf=\"!editmode\" class=\"uk-text-lead\" style=\"white-space: pre-wrap;\">\n                            {{post.text}}\n                          </p>\n\n\n\n                          <textarea *ngIf=\"editmode\" class=\"uk-textarea\" type=\"text\" name=\"text\" value=\"{{post.text}}\" placeholder=\"{{post.text}}\"\n                            [(ngModel)]=\"post.text\" style=\"min-height: 400px;\">\n                          </textarea>\n\n\n                          <div *ngIf=\"auth.author | async as author\">\n\n                            <div *ngIf=\"author.rol == 'admin'\" class=\"uk-margin uk-text-right\">\n                              <h1>\n                                <a *ngIf=\"!editmode\" style=\"text-decoration: none;\" (click)=\"editmode = !editmode\">\n                                  <i class=\"icon ion-md-create\" style=\"font-size: 35px;\"></i>\n                                </a>\n                                <a *ngIf=\"editmode\" style=\"text-decoration: none; font-size: 18px\" (click)=\"editmode = !editmode\">\n                                  Cancelar\n                                </a> &nbsp;&nbsp;&nbsp;\n                                <a *ngIf=\"editmode\" style=\"text-decoration: none; font-size: 18px\" (click)=\"edit_post()\">\n                                  Confirmar\n                                </a>\n                              </h1>\n                            </div>\n\n                          </div>\n\n\n\n                          <div *ngIf=\"post.type === 'pdf'\">\n                            <embed [src]=\"post.pdf\" width=\"800\" height=\"1000px\" />\n                          </div>\n\n                          <div *ngIf=\"post.type === 'img'\">\n                            <img [src]=\"post.image\" width=\"100%\" height=\"auto\">\n                          </div>\n\n\n                          <div class=\"uk-grid-small uk-child-width-auto\" uk-grid>\n                            <div>\n                              <a class=\"uk-button uk-button-text\">{{post.comments.length}} Comments</a>\n                            </div>\n                          </div>\n\n                        </article>\n\n                        <hr/>\n\n                        <br/>\n                        <br/>\n                        <br/>\n                        <br/>\n\n\n\n                        <article class=\"uk-comment\" *ngFor=\"let comment of post.comments\">\n                          <div *ngIf=\"comment.text\">\n                            <br/>\n                            <header class=\"uk-comment-header uk-grid-medium uk-flex-middle\" uk-grid>\n                              <div class=\"uk-width-auto\">\n                                <img *ngIf=\"comment.author && comment.author.photoURL\" class=\"uk-comment-avatar\" src=\"{{comment.author.photoURL}}\" width=\"80\"\n                                  height=\"80\" alt=\"\">\n                                <img *ngIf=\"!comment.author\" class=\"uk-comment-avatar\" src=\"https://lh3.googleusercontent.com/u3GTJ9bMkzdhyymUto5QvVZpS8EER2D7tN_aOCDLiuQtAlPsWy8h-lO10XIr08Zo8lmIxQ2WVPUCcyJNxmlnQupsaZWZsMuDmn09GNhFOaKGMWra6OP18TU6WN5W6rrjS5-m7OcLQ4eJjHuGUlJm7p98pO8uPjw5UaFyvZ9mdctwnOm8dNVbogP9eQcuUoIYgI6hN20Vda4XwNhqURVX6c19PFWZ_ed77KKBs2tXeRCF9BKGcoHtFKzf6vwVDuhB5G9q0Hlg4dpX6RcfliRJ5oBk5XGzwI1F8GctVskTbNEG9sc-9OOqiA8rCuw7aa2M5U_IYDbi7kDBTrRYSqfD4OktzUu_zCqL8AvhHc0fzs-F6BPLqvB9Jv9p9XAvvmj--aHdlRcZf-nLQxMQJIn47OLBRPBRlNo62uXZlNTPWkpK8yqCREYd2GIQADyzH2aHtFAzcRmyShzegKnCGAdxuFR6rebL7phK9yK8ix4upyOw6BgMkNOKDmHiHZ9sMHtf9Y-W5kcLRZ34H2fe5yQeIwsYlZNvxvYfCeCO6eEHor99yZy7bQDGwb7U3U4SEp-eR9QM1MWnIoJDbV0wADrF4OS4afGEhHpXHEpuM-ek=w245-h244-no\"\n                                  width=\"80\" height=\"80\" alt=\"\">\n                              </div>\n                              <div class=\"uk-width-expand\">\n                                <h4 class=\"uk-comment-title uk-margin-remove\">\n                                  <a *ngIf=\"comment.author\" class=\"uk-link-reset\">{{comment.author.displayName}}</a>\n                                  <a *ngIf=\"!comment.author\" class=\"uk-link-reset\">Anonimo</a>\n                                </h4>\n                                <ul class=\"uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top\">\n                                  <li>\n                                    <a>{{comment.date | date}}</a>\n                                  </li>\n                                </ul>\n                              </div>\n                            </header>\n                            <div class=\"uk-comment-body\" style=\"white-space: pre-wrap;\">\n                              <p>\n                                {{comment.text}}\n                              </p>\n                            </div>\n                            <hr/>\n                            <br/>\n                          </div>\n                        </article>\n\n\n\n                        <div *ngIf=\"auth.author | async; then authenticated else guest\"></div>\n\n                        <ng-template #authenticated>\n                          <div class=\"uk-margin\">\n                            <textarea [(ngModel)]=\"nuevo_comentario\" name=\"nuevo\" class=\"uk-textarea\" rows=\"5\" placeholder=\"Escribe un comentario...\"></textarea>\n                          </div>\n\n                          <div class=\"uk-margin uk-text-right\">\n                            <button (click)=\"post_comment(i)\" class=\"uk-button uk-button-text\" style=\"font-size: 18px; color: rgb(14, 112, 136);\">Publicar</button>\n                          </div>\n                        </ng-template>\n\n\n                        <ng-template #guest>\n                          <div class=\"uk-margin\">\n                            <a (click)=\"auth.google_login()\">\n                              <h1 style=\" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgb(167, 167, 167);\">\n                                <i class=\"icon ion-logo-googleplus\" style=\"font-size: 35px;\"></i> &nbsp; Registrate para comentar\n                              </h1>\n                            </a>\n                          </div>\n                        </ng-template>\n\n\n\n\n\n\n                      </div>\n                    </div>\n                    <div class=\"uk-width-1-6@m\"></div>\n                  </div>\n\n                  <div id=\"nbsp-inline\">\n                    &nbsp;\n                  </div>\n\n                </div>\n\n\n\n\n\n\n              </div>\n            </div>\n\n\n\n\n\n          </div>\n\n\n\n          <div *ngIf=\"!(publication | async)\">\n            <h1 style=\" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgba(167, 167, 167, 0.534);\">Cragando...</h1>\n          </div>\n\n        </div>\n\n\n      </div>\n    </div>\n    <div class=\"uk-width-1-6@m\"></div>\n  </div>\n\n\n\n\n\n\n\n\n\n\n\n\n  <div id=\"nbsp-inline\">\n    &nbsp;\n  </div>\n\n\n\n\n</div>\n"
+module.exports = "<div style=\"position: absolute; top: 0; width: 100%; min-height: 100vh; overflow-x: hidden; background-color: whitesmoke; z-index: 200;\">\n\n  <a class=\"uk-button\" type=\"button\" style=\"text-decoration: none;\" routerLink=\"/foro\">\n    <i id=\"menu_icon\" class=\"icon ion-ios-arrow-back\" style=\"font-size: 55px;\"></i>\n  </a>\n\n\n\n\n  <div id=\"modal-post-post\" uk-modal>\n    <div class=\"uk-modal-dialog\">\n\n\n      <button class=\"uk-modal-close-default\" type=\"button\" uk-close></button>\n\n      <div class=\"uk-modal-header\">\n        <h2 *ngIf=\"!publicado_post\" class=\"uk-modal-title\">Crea una nueva entrada</h2>\n        <h2 *ngIf=\"publicado_post\" class=\"uk-modal-title\" style=\"color: rgb(31, 177, 61);\">Publicado!</h2>\n      </div>\n\n      <div *ngIf=\"!publicado_post\" class=\"uk-modal-body\">\n        <form (ngSubmit)=\"onSubmit(postForm)\" #postForm=\"ngForm\">\n          <fieldset class=\"uk-fieldset\">\n            <div class=\"uk-margin\">\n              <input [(ngModel)]=\"pub_model.title\" #title=\"ngModel\" name=\"title\" required minlength=\"1\" [ngClass]=\"{'uk-form-danger': title.errors && title.touched}\"\n                class=\"uk-input\" type=\"text\" placeholder=\"Un título interesante\">\n            </div>\n            <div class=\"uk-margin\">\n              <textarea [(ngModel)]=\"pub_model.text\" #text=\"ngModel\" name=\"text\" required minlength=\"1\" [ngClass]=\"{'uk-form-danger': text.errors && text.touched}\"\n                class=\"uk-input\" type=\"text\" placeholder=\"Texto\"></textarea>\n            </div>\n            <div class=\"uk-margin\">\n              <select class=\"uk-select\" [(ngModel)]=\"doc\" #selection=\"ngModel\" name=\"selection\" required>\n                <option value=\"\" selected disabled hidden>Tipo de documento</option>\n                <option value=\"na\">Solo Texto</option>\n                <option value=\"img\">Imagen</option>\n                <option value=\"pdf\">Documento PDF</option>\n              </select>\n            </div>\n\n            <div class=\"uk-margin\" [style.display]=\" doc === 'na' ? 'none' : 'block' \">\n              <input [(ngModel)]=\"pub_model.image\" #image=\"ngModel\" name=\"image\" [ngClass]=\"{'uk-form-danger': image.errors && image.touched}\"\n                class=\"uk-input\" type=\"text\" [placeholder]=\" doc === 'img' ? 'URL Imagen documento' : 'URL Documento PDF, se puede obtener al subir el archivo a Google Drive'\">\n            </div>\n\n            <br/>\n            <hr/>\n            <div class=\"uk-margin uk-text-right\">\n              <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">Cancelar</button>\n              <button type=\"submit\" [disabled]=\"!postForm.form.valid\" class=\"uk-button uk-button-primary\">\n                Publicar\n              </button>\n            </div>\n          </fieldset>\n        </form>\n      </div>\n\n\n      <div *ngIf=\"publicado_post\" class=\"uk-modal-body\">\n        <div class=\"uk-margin uk-text-center\">\n          <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">Listo</button>\n        </div>\n      </div>\n\n    </div>\n  </div>\n\n\n\n\n\n\n\n  <div uk-grid>\n    <div class=\"uk-width-1-6@m\"></div>\n    <div class=\"uk-width-expand@m\">\n      <div style=\"position: relative;\">\n\n\n\n        <h1 style=\" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);\">{{(publication | async)?.title}}</h1>\n\n        <div *ngIf=\"auth.author | async as author\">\n          <a *ngIf=\"author.rol === 'admin'\" (click)=\"publicado_post = false\" href=\"#modal-post-post\" uk-toggle>\n            <h1>\n              <i class=\"icon ion-md-add\" style=\"font-size: 75px; position: absolute; top: 0em; right: 1em;\"></i>\n            </h1>\n          </a>\n        </div>\n\n        <hr/>\n\n        <br/>\n        <br/>\n\n        <div uk-grid=\"masonry: true\">\n\n          <div class=\"uk-width-1-2@m\" style=\"position: relative;\" *ngFor=\"let post of posts; let i = index\">\n            <!--NG FOR-->\n\n            <div class=\"uk-card uk-card-default uk-card-hover \">\n\n\n              <span style=\"position: absolute; top: 8px; right: 8px;\">\n                <h6 style=\"font-size: 12px\">{{post.date | date}}</h6>\n              </span>\n              <a style=\"text-decoration: none;\" href=\"#modal-full-{{i}}\" uk-toggle>\n                <div class=\"uk-card-body\">\n                  <h3 class=\"uk-card-title\">{{post.title}}</h3>\n                </div>\n              </a>\n              <div class=\"uk-card-footer\">\n\n\n\n                <div *ngIf=\"auth.author | async as author; else user\">\n\n                  <div *ngIf=\"author.rol == 'admin'; else rol\">\n                    <div uk-grid>\n                      <div class=\"uk-width-1-3@m\">{{post.visits}} Visitas</div>\n                      <div class=\"uk-width-expand@m\">{{post.comments.length}} Comentarios</div>\n                      <div class=\"uk-width-1-6@m uk-text-right\">\n                        <a (click)=\"delete(i)\">\n                          <i class=\"icon ion-md-trash\" style=\"font-size: 25px;\"></i>\n                        </a>\n                      </div>\n                    </div>\n                  </div>\n                  <ng-template #rol>\n                    <div uk-grid>\n                      <div class=\"uk-width-1-2@m\">{{post.visits}} &nbsp; Visitas</div>\n                      <div class=\"uk-width-1-2@m uk-text-right\">{{post.comments.length}} &nbsp; Comentarios</div>\n                    </div>\n                  </ng-template>\n\n\n                </div>\n\n                <ng-template #user>\n                  <div uk-grid>\n                    <div class=\"uk-width-1-2@m\">{{post.visits}} &nbsp; Visitas</div>\n                    <div class=\"uk-width-1-2@m uk-text-right\">{{post.comments.length}} &nbsp; Comentarios</div>\n                  </div>\n                </ng-template>\n\n\n\n\n              </div>\n\n\n            </div>\n\n\n\n            <div id=\"modal-full-{{i}}\" class=\"uk-modal-full\" uk-modal>\n              <div class=\"uk-modal-dialog\" style=\"min-height: 100vh;\">\n\n\n                <div style=\"padding-top: 5em;\">\n\n                  <a class=\"uk-modal-close-full uk-close-large\" type=\"button\" uk-close>\n                  </a>\n\n\n                  <div uk-grid>\n                    <div class=\"uk-width-1-6@m\"></div>\n                    <div class=\"uk-width-expand@m\">\n                      <div>\n\n\n\n                        <h1 style=\" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);\">{{post.title}}</h1>\n                        <hr/>\n\n                        <br/>\n                        <br/>\n\n                        <article class=\"uk-article\">\n\n                          <h1 class=\"uk-article-title\">\n                            <!-- <a class=\"uk-link-reset\">Heading</a> -->\n                          </h1>\n\n                          <p class=\"uk-article-meta\">Publicado por Carlos Humberto Garcia {{post.date}}\n                          </p>\n\n                          <p *ngIf=\"!editmode\" class=\"uk-text-lead\" style=\"white-space: pre-wrap;\">\n                            {{post.text}}\n                          </p>\n\n\n\n                          <textarea *ngIf=\"editmode\" class=\"uk-textarea\" type=\"text\" name=\"text\" value=\"{{post.text}}\" placeholder=\"{{post.text}}\"\n                            [(ngModel)]=\"post.text\" style=\"min-height: 400px;\">\n                          </textarea>\n\n\n                          <div *ngIf=\"auth.author | async as author\">\n\n                            <div *ngIf=\"author.rol == 'admin'\" class=\"uk-margin uk-text-right\">\n                              <h1>\n                                <a *ngIf=\"!editmode\" style=\"text-decoration: none;\" (click)=\"editmode = !editmode\">\n                                  <i class=\"icon ion-md-create\" style=\"font-size: 35px;\"></i>\n                                </a>\n                                <a *ngIf=\"editmode\" style=\"text-decoration: none; font-size: 18px\" (click)=\"editmode = !editmode\">\n                                  Cancelar\n                                </a> &nbsp;&nbsp;&nbsp;\n                                <a *ngIf=\"editmode\" style=\"text-decoration: none; font-size: 18px\" (click)=\"edit_post()\">\n                                  Confirmar\n                                </a>\n                              </h1>\n                            </div>\n\n                          </div>\n\n\n\n                          <div *ngIf=\"post.type === 'pdf'\">\n                            <embed [src]=\"post.pdf\" width=\"800\" height=\"1000px\" />\n                          </div>\n\n                          <div *ngIf=\"post.type === 'img'\">\n                            <img [src]=\"post.image\" width=\"100%\" height=\"auto\">\n                          </div>\n\n\n                          <div class=\"uk-grid-small uk-child-width-auto\" uk-grid>\n                            <div>\n                              <a class=\"uk-button uk-button-text\">{{post.comments.length}} Comments</a>\n                            </div>\n                          </div>\n\n                        </article>\n\n                        <hr/>\n\n                        <br/>\n                        <br/>\n                        <br/>\n                        <br/>\n\n\n\n                        <article class=\"uk-comment\" *ngFor=\"let comment of post.comments\">\n                          <div *ngIf=\"comment.text\">\n                            <br/>\n                            <header class=\"uk-comment-header uk-grid-medium uk-flex-middle\" uk-grid>\n                              <div class=\"uk-width-auto\">\n                                <img *ngIf=\"comment.author && comment.author.photoURL\" class=\"uk-comment-avatar\" src=\"{{comment.author.photoURL}}\" width=\"80\"\n                                  height=\"80\" alt=\"\">\n                                <img *ngIf=\"!comment.author\" class=\"uk-comment-avatar\" src=\"https://lh3.googleusercontent.com/u3GTJ9bMkzdhyymUto5QvVZpS8EER2D7tN_aOCDLiuQtAlPsWy8h-lO10XIr08Zo8lmIxQ2WVPUCcyJNxmlnQupsaZWZsMuDmn09GNhFOaKGMWra6OP18TU6WN5W6rrjS5-m7OcLQ4eJjHuGUlJm7p98pO8uPjw5UaFyvZ9mdctwnOm8dNVbogP9eQcuUoIYgI6hN20Vda4XwNhqURVX6c19PFWZ_ed77KKBs2tXeRCF9BKGcoHtFKzf6vwVDuhB5G9q0Hlg4dpX6RcfliRJ5oBk5XGzwI1F8GctVskTbNEG9sc-9OOqiA8rCuw7aa2M5U_IYDbi7kDBTrRYSqfD4OktzUu_zCqL8AvhHc0fzs-F6BPLqvB9Jv9p9XAvvmj--aHdlRcZf-nLQxMQJIn47OLBRPBRlNo62uXZlNTPWkpK8yqCREYd2GIQADyzH2aHtFAzcRmyShzegKnCGAdxuFR6rebL7phK9yK8ix4upyOw6BgMkNOKDmHiHZ9sMHtf9Y-W5kcLRZ34H2fe5yQeIwsYlZNvxvYfCeCO6eEHor99yZy7bQDGwb7U3U4SEp-eR9QM1MWnIoJDbV0wADrF4OS4afGEhHpXHEpuM-ek=w245-h244-no\"\n                                  width=\"80\" height=\"80\" alt=\"\">\n                              </div>\n                              <div class=\"uk-width-expand\">\n                                <h4 class=\"uk-comment-title uk-margin-remove\">\n                                  <a *ngIf=\"comment.author\" class=\"uk-link-reset\">{{comment.author.displayName}}</a>\n                                  <a *ngIf=\"!comment.author\" class=\"uk-link-reset\">Anonimo</a>\n                                </h4>\n                                <ul class=\"uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top\">\n                                  <li>\n                                    <a>{{comment.date | date}}</a>\n                                  </li>\n                                </ul>\n                              </div>\n                            </header>\n                            <div class=\"uk-comment-body\" style=\"white-space: pre-wrap;\">\n                              <p>\n                                {{comment.text}}\n                              </p>\n                            </div>\n                            <hr/>\n                            <br/>\n                          </div>\n                        </article>\n\n\n\n                        <div *ngIf=\"auth.author | async; then authenticated else guest\"></div>\n\n                        <ng-template #authenticated>\n                          <div class=\"uk-margin\">\n                            <textarea [(ngModel)]=\"nuevo_comentario\" name=\"nuevo\" class=\"uk-textarea\" rows=\"5\" placeholder=\"Escribe un comentario...\"></textarea>\n                          </div>\n\n                          <div class=\"uk-margin uk-text-right\">\n                            <button (click)=\"post_comment(i)\" class=\"uk-button uk-button-text\" style=\"font-size: 18px; color: rgb(14, 112, 136);\">Publicar</button>\n                          </div>\n                        </ng-template>\n\n\n                        <ng-template #guest>\n                          <div class=\"uk-margin\">\n                            <a (click)=\"auth.google_login()\">\n                              <h1 style=\" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgb(167, 167, 167);\">\n                                <i class=\"icon ion-logo-googleplus\" style=\"font-size: 35px;\"></i> &nbsp; Registrate para comentar\n                              </h1>\n                            </a>\n                          </div>\n                        </ng-template>\n\n\n\n\n\n\n                      </div>\n                    </div>\n                    <div class=\"uk-width-1-6@m\"></div>\n                  </div>\n\n                  <div id=\"nbsp-inline\">\n                    &nbsp;\n                  </div>\n\n                </div>\n\n\n\n\n\n\n              </div>\n            </div>\n\n\n\n\n\n          </div>\n\n\n\n          <div *ngIf=\"!(publication | async)\">\n            <h1 style=\" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgba(167, 167, 167, 0.534);\">Cragando...</h1>\n          </div>\n\n        </div>\n\n\n      </div>\n    </div>\n    <div class=\"uk-width-1-6@m\"></div>\n  </div>\n\n\n\n\n\n\n\n\n\n\n\n\n  <div id=\"nbsp-inline\">\n    &nbsp;\n  </div>\n\n\n\n\n</div>\n"
 
 /***/ }),
 
@@ -870,7 +1013,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"background-color: whitesmoke; position: absolute; top: 0; right: 0; width: 100%; min-height: 100vh;\">\n\n\n  <a class=\"uk-button\" type=\"button\" style=\"text-decoration: none;\" (click)=\"go_back()\">\n    <i id=\"menu_icon\" class=\"icon ion-ios-arrow-back\" style=\"font-size: 55px;\"></i>\n  </a>\n\n\n  <div class=\"uk-container\">\n\n\n\n\n    <article class=\"uk-comment uk-comment-primary\" style=\"padding-left: 5em; position: relative;  background-color: white; border-radius: 0.5em;\">\n\n      <i (click)=\"seed.ups = seed.ups + 1; update()\" class=\"icon ion-ios-arrow-up\" style=\"font-size: 35px; position: absolute; top: 15px; left: 15px;\"></i>\n\n      <p style=\"font-size: 18px; position: absolute; top: 35px; left: 20px;\">{{(seed | async)?.ups}}</p>\n\n      <i (click)=\"seed.ups = seed.ups - 1; update()\" class=\"icon ion-ios-arrow-down\" style=\"font-size: 35px; position: absolute; top: 75px; left: 15px;\"></i>\n\n      <header class=\"uk-comment-header uk-grid-medium uk-flex-middle\" uk-grid>\n        <div class=\"uk-width-auto\">\n          <img class=\"uk-comment-avatar\" src=\"{{(seed | async)?.author_image}}\" width=\"80\" height=\"80\" alt=\"\">\n        </div>\n        <div class=\"uk-width-expand\">\n          <h4 class=\"uk-comment-title uk-margin-remove\">\n            <a class=\"uk-link-reset\" href=\"#\">{{(seed | async)?.author}}</a>\n          </h4>\n          <ul class=\"uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top\">\n            <li>\n              <a>{{(seed | async)?.date | date}}</a>\n            </li>\n\n          </ul>\n        </div>\n      </header>\n      <div class=\"uk-comment-body\">\n        <p>\n          {{(seed | async)?.title}}\n        </p>\n\n        <p style=\"font-size: 18px;\">\n          {{(seed | async)?.text}}\n        </p>\n\n        <img *ngIf=\"seed.image != '' && seed.image \" [src]=\"seed.image\" height=\"auto\" width=\"100%\">\n\n      </div>\n      <hr/>\n      <br/>\n    </article>\n\n\n    <div *ngIf=\"auth.author | async; then authenticated else guest\"></div>\n\n    <ng-template #authenticated>\n      <div class=\"uk-margin\">\n        <textarea [(ngModel)]=\"new_reply\" name=\"nuevo\" class=\"uk-textarea\" rows=\"5\" placeholder=\"Escribe un comentario...\"></textarea>\n      </div>\n\n      <div class=\"uk-margin uk-text-right\">\n        <button (click)=\"reply()\" class=\"uk-button uk-button-text\" style=\"font-size: 18px; color: rgb(14, 112, 136);\">Comentar</button>\n      </div>\n    </ng-template>\n\n\n    <ng-template #guest>\n     <div class=\"uk-margin\">\n      <a (click)=\"auth.google_login()\">\n        <h1 style=\" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgb(167, 167, 167);\">\n            <i class=\"icon ion-logo-googleplus\" style=\"font-size: 35px;\"></i> &nbsp;\n            Registrate para comentar\n        </h1>\n      </a>\n    </div>\n    </ng-template>\n\n\n\n\n\n\n\n\n    <article class=\"uk-comment\" *ngFor=\"let comment of replies\">\n      <div *ngIf=\"comment.text\">\n        <br/>\n        <header class=\"uk-comment-header uk-grid-medium uk-flex-middle\" uk-grid>\n\n          <div class=\"uk-width-expand\">\n            <h4 class=\"uk-comment-title uk-margin-remove\">\n              <a *ngIf=\"comment.author\" class=\"uk-link-reset\">{{comment.author}}</a>\n              <a *ngIf=\"!comment.author\" class=\"uk-link-reset\">Anonimo</a>\n            </h4>\n            <ul class=\"uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top\">\n              <li>\n                <a>{{comment.date | date}}</a>\n              </li>\n            </ul>\n          </div>\n        </header>\n        <div class=\"uk-comment-body\" style=\"white-space: pre-wrap;\">\n          <p style=\"font-size: 18px;\">\n            {{comment.text}}\n          </p>\n        </div>\n        <hr/>\n        <br/>\n      </div>\n    </article>\n\n\n\n\n\n\n  </div>\n\n\n\n\n\n</div>\n"
+module.exports = "<div style=\"background-color: whitesmoke; position: absolute; top: 0; right: 0; width: 100%; min-height: 100vh; z-index: 200\">\n\n\n  <a class=\"uk-button\" type=\"button\" style=\"text-decoration: none;\" (click)=\"go_back()\">\n    <i id=\"menu_icon\" class=\"icon ion-ios-arrow-back\" style=\"font-size: 55px;\"></i>\n  </a>\n\n\n  <div class=\"uk-container\">\n\n\n\n\n    <article class=\"uk-comment uk-comment-primary\" style=\"padding-left: 5em; position: relative;  background-color: white; border-radius: 0.5em;\">\n\n      <i (click)=\"seed.ups = seed.ups + 1; update()\" class=\"icon ion-ios-arrow-up\" style=\"font-size: 35px; position: absolute; top: 15px; left: 15px;\"></i>\n\n      <p style=\"font-size: 18px; position: absolute; top: 35px; left: 20px;\">{{(seed | async)?.ups}}</p>\n\n      <i (click)=\"seed.ups = seed.ups - 1; update()\" class=\"icon ion-ios-arrow-down\" style=\"font-size: 35px; position: absolute; top: 75px; left: 15px;\"></i>\n\n      <header class=\"uk-comment-header uk-grid-medium uk-flex-middle\" uk-grid>\n        <div class=\"uk-width-auto\">\n          <img class=\"uk-comment-avatar\" src=\"{{(seed | async)?.author_image}}\" width=\"80\" height=\"80\" alt=\"\">\n        </div>\n        <div class=\"uk-width-expand\">\n          <h4 class=\"uk-comment-title uk-margin-remove\">\n            <a class=\"uk-link-reset\" href=\"#\">{{(seed | async)?.author}}</a>\n          </h4>\n          <ul class=\"uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top\">\n            <li>\n              <a>{{(seed | async)?.date | date}}</a>\n            </li>\n\n          </ul>\n        </div>\n      </header>\n      <div class=\"uk-comment-body\">\n        <p>\n          {{(seed | async)?.title}}\n        </p>\n\n        <p style=\"font-size: 18px;\">\n          {{(seed | async)?.text}}\n        </p>\n\n        <img *ngIf=\"seed.image != '' && seed.image \" [src]=\"seed.image\" height=\"auto\" width=\"100%\">\n\n      </div>\n      <hr/>\n      <br/>\n    </article>\n\n\n    <div *ngIf=\"auth.author | async; then authenticated else guest\"></div>\n\n    <ng-template #authenticated>\n      <div class=\"uk-margin\">\n        <textarea [(ngModel)]=\"new_reply\" name=\"nuevo\" class=\"uk-textarea\" rows=\"5\" placeholder=\"Escribe un comentario...\"></textarea>\n      </div>\n\n      <div class=\"uk-margin uk-text-right\">\n        <button (click)=\"reply()\" class=\"uk-button uk-button-text\" style=\"font-size: 18px; color: rgb(14, 112, 136);\">Comentar</button>\n      </div>\n    </ng-template>\n\n\n    <ng-template #guest>\n     <div class=\"uk-margin\">\n      <a (click)=\"auth.google_login()\">\n        <h1 style=\" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgb(167, 167, 167);\">\n            <i class=\"icon ion-logo-googleplus\" style=\"font-size: 35px;\"></i> &nbsp;\n            Registrate para comentar\n        </h1>\n      </a>\n    </div>\n    </ng-template>\n\n\n\n\n\n\n\n\n    <article class=\"uk-comment\" *ngFor=\"let comment of replies\">\n      <div *ngIf=\"comment.text\">\n        <br/>\n        <header class=\"uk-comment-header uk-grid-medium uk-flex-middle\" uk-grid>\n\n          <div class=\"uk-width-expand\">\n            <h4 class=\"uk-comment-title uk-margin-remove\">\n              <a *ngIf=\"comment.author\" class=\"uk-link-reset\">{{comment.author}}</a>\n              <a *ngIf=\"!comment.author\" class=\"uk-link-reset\">Anonimo</a>\n            </h4>\n            <ul class=\"uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top\">\n              <li>\n                <a>{{comment.date | date}}</a>\n              </li>\n            </ul>\n          </div>\n        </header>\n        <div class=\"uk-comment-body\" style=\"white-space: pre-wrap;\">\n          <p style=\"font-size: 18px;\">\n            {{comment.text}}\n          </p>\n        </div>\n        <hr/>\n        <br/>\n      </div>\n    </article>\n\n\n\n\n\n\n  </div>\n\n\n\n\n\n</div>\n"
 
 /***/ }),
 
@@ -994,7 +1137,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"position: absolute; top: 0; width: 100%; min-height: 100vh; overflow-x: hidden; background-color: whitesmoke\">\n\n\n    <a class=\"uk-button uk-margin-top\" type=\"button\" uk-toggle=\"target: #offcanvas-nav-primary\" style=\"text-decoration: none; position: fixed; z-index: 100;\">\n        <i id=\"menu_icon\" class=\"icon ion-md-menu\" style=\"font-size: 65px;\"></i>\n      </a>\n    \n\n\n\n\n\n\n    <div id=\"modal-full\" class=\"uk-modal-full\" uk-modal>\n      <div class=\"uk-modal-dialog\" style=\"height: 100vh; width: 100%;\">\n        <div style=\"padding-top: 5em;\">\n          <a class=\"uk-modal-close-full uk-close-large\" type=\"button\" uk-close>\n          </a>\n          <div uk-grid>\n            <div class=\"uk-width-1-4@m\"></div>\n            <div class=\"uk-width-expand@m\">\n\n\n              <div class=\"uk-card\">\n                <div class=\"uk-card-header\" style=\"margin-bottom: -1em\">\n                  <h2 *ngIf=\"!posteado\" class=\"uk-modal-title\">Post</h2>\n                  <h2 *ngIf=\"posteado\" class=\"uk-modal-title\" style=\"color: rgb(31, 177, 61);\">Publicado!</h2>\n                </div>\n\n                <div *ngIf=\"!posteado\" class=\"uk-card-body\" style=\"margin-top: -1em;\">\n\n                  <form (ngSubmit)=\"onSubmit(seedForm)\" #seedForm=\"ngForm\">\n                    <fieldset class=\"uk-fieldset\">\n                      <div class=\"uk-margin\">\n                        <input class=\"uk-input\" type=\"text\" name=\"title\" required minlength=\"3\" placeholder=\"Un título interesante\" [(ngModel)]=\"model_seed.title\"\n                          #title=\"ngModel\" [ngClass]=\"{'uk-form-danger': title.errors && title.touched}\">\n                      </div>\n                      <div class=\"uk-margin\">\n                        <textarea class=\"uk-textarea\" name=\"text\" placeholder=\"Texto (opcional)\" [(ngModel)]=\"model_seed.text\" #text=\"ngModel\"></textarea>\n                      </div>\n                      <div class=\"uk-margin\">\n                        <input class=\"uk-input\" type=\"text\" name=\"image\" placeholder=\"URL Imagen (opcional)\" [(ngModel)]=\"model_seed.image\" #image=\"ngModel\">\n                      </div>\n\n                      <br/>\n                      <hr/>\n                      <div class=\"uk-margin uk-text-right\">\n                        <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">Cancelar</button>\n                        <button type=\"submit\" [disabled]=\"!seedForm.form.valid\" class=\"uk-button uk-button-primary\">\n                          Confirmar\n                        </button>\n                      </div>\n                    </fieldset>\n                  </form>\n\n                </div>\n\n\n                <div *ngIf=\"posteado\" class=\"uk-card-body\">\n                  <div class=\"uk-margin uk-text-center\">\n                    <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">Listo</button>\n                  </div>\n                </div>\n\n              </div>\n\n\n            </div>\n            <div class=\"uk-width-1-4@m\"></div>\n          </div>\n        </div>\n      </div>\n    </div>\n\n\n\n\n\n\n\n\n\n\n\n\n\n    <div uk-grid>\n      <div class=\"uk-width-1-3@m\"></div>\n      <div class=\"uk-width-1-3@m\">\n        <div id=\"logo_black\"></div>\n      </div>\n      <div class=\"uk-width-1-3@m\"></div>\n    </div>\n\n\n\n\n\n\n    <div uk-grid>\n      <div class=\"uk-width-1-6@m\"></div>\n      <div class=\"uk-width-expand@m\">\n        <div style=\"position: relative;\">\n\n\n\n\n\n          <h1 style=\" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);\">Social</h1>\n\n        <div *ngIf=\"auth.author | async\">\n          <a style=\"text-decoration: none;\" href=\"#modal-full\" uk-toggle (click)=\"posteado = false\">\n            <h1>\n              <i class=\"icon ion-md-add\" style=\"font-size: 75px; position: absolute; top: 0em; right: 1em;\"></i>\n            </h1>\n          </a>\n        </div>\n\n          <hr/>\n\n          <br/>\n          <br/>\n\n          <div uk-grid>\n\n\n            <div class=\"uk-width-1-1\" *ngFor=\"let seed of seeds | async; let i = index\">\n\n\n\n              <article class=\"uk-comment uk-comment-primary\" style=\"padding-left: 5em; position: relative;  background-color: white; border-radius: 0.5em;\">\n\n\n                <div *ngIf=\"auth.author | async; then authenticated else guest\"></div>\n\n                <ng-template #authenticated>\n                  <div *ngIf=\"auth.author | async as author\">\n                    <span *ngIf=\"author.rol == 'admin'\" (click)=\"delete(seed.id)\" style=\"font-size: 35px; position: absolute; top: 25px; right: 25px;\"\n                      uk-icon=\"icon: minus-circle; ratio: 1.5\"></span>\n                  </div>\n\n                  <i (click)=\"seed.ups = seed.ups + 1; update(seed)\" class=\"icon ion-ios-arrow-up\" style=\"font-size: 35px; position: absolute; top: 15px; left: 15px;\"></i>\n\n                  <p style=\"font-size: 18px; position: absolute; top: 35px; left: 20px;\">{{seed.ups}}</p>\n\n                  <i (click)=\"seed.ups = seed.ups - 1; update(seed)\" class=\"icon ion-ios-arrow-down\" style=\"font-size: 35px; position: absolute; top: 75px; left: 15px;\"></i>\n                </ng-template>\n\n\n                <ng-template #guest>\n                  <div *ngIf=\"intenta_votar\">\n                    <a (click)=\"auth.google_login()\">\n                      <h1 style=\" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgb(167, 167, 167);\">\n                        <i class=\"icon ion-logo-googleplus\" style=\"font-size: 35px;\"></i> &nbsp; Registrate para votar\n                      </h1>\n                    </a>\n                  </div>\n                  <i (click)=\"update(seed)\" class=\"icon ion-ios-arrow-up\" style=\"font-size: 35px; position: absolute; top: 15px; left: 15px;\"></i>\n                  <p style=\"font-size: 18px; position: absolute; top: 35px; left: 20px;\">{{seed.ups}}</p>\n                  <i (click)=\"update(seed)\" class=\"icon ion-ios-arrow-down\" style=\"font-size: 35px; position: absolute; top: 75px; left: 15px;\"></i>\n                </ng-template>\n\n\n\n\n\n\n\n\n                <header class=\"uk-comment-header uk-grid-medium uk-flex-middle\" uk-grid>\n                  <div class=\"uk-width-auto\">\n                    <img class=\"uk-comment-avatar\" [src]=\"seed.author_image\" width=\"80\" height=\"80\" alt=\"\">\n                  </div>\n                  <div class=\"uk-width-expand\">\n                    <h4 class=\"uk-comment-title uk-margin-remove\">\n                      <a class=\"uk-link-reset\">{{seed.author}}</a>\n                    </h4>\n                    <ul class=\"uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top\">\n                      <li>\n                        <a>{{seed.date | date}}</a>\n                      </li>\n                      <li>\n                        <a routerLink=\"/social/posts/{{seed.id}}\">{{seed.replies.length}} &nbsp; Comentarios</a>\n                      </li>\n                    </ul>\n                  </div>\n                </header>\n\n\n                <div class=\"uk-comment-body\">\n                  <p>\n                    {{seed.title}}\n                  </p>\n\n                  <img *ngIf=\"seed.image != '' && seed.image \" [src]=\"seed.image\" height=\"auto\" width=\"100%\">\n\n                </div>\n\n\n              </article>\n\n\n\n\n\n            </div>\n\n\n            <div *ngIf=\"!(seeds | async)\">\n              Cargando...\n            </div>\n\n\n\n\n          </div>\n\n\n        </div>\n      </div>\n      <div class=\"uk-width-1-6@m\"></div>\n    </div>\n\n\n\n\n\n\n    <div id=\"nbsp-inline\">\n      &nbsp;\n    </div>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</div>\n"
+module.exports = "<div style=\"position: absolute; top: 0; width: 100%; min-height: 100vh; overflow-x: hidden; background-color: whitesmoke\">\n\n\n  <a class=\"uk-button uk-margin-top\" type=\"button\" uk-toggle=\"target: #offcanvas-nav-primary\" style=\"text-decoration: none; position: fixed; z-index: 100;\">\n    <i id=\"menu_icon\" class=\"icon ion-md-menu\" style=\"font-size: 65px;\"></i>\n  </a>\n\n\n\n\n\n\n\n  <div id=\"modal-full\" class=\"uk-modal-full\" uk-modal>\n    <div class=\"uk-modal-dialog\" style=\"min-height: 100vh; width: 100%;\">\n      <div style=\"padding-top: 5em;\">\n        <a class=\"uk-modal-close-full uk-close-large\" type=\"button\" uk-close>\n        </a>\n        <div uk-grid>\n          <div class=\"uk-width-1-4@m\"></div>\n          <div class=\"uk-width-expand@m\">\n\n\n            <div class=\"uk-card\">\n              <div class=\"uk-card-header\" style=\"margin-bottom: -1em\">\n                <h2 *ngIf=\"!posteado\" class=\"uk-modal-title\">Post</h2>\n                <h2 *ngIf=\"posteado\" class=\"uk-modal-title\" style=\"color: rgb(31, 177, 61);\">Publicado!</h2>\n              </div>\n\n              <div *ngIf=\"!posteado\" class=\"uk-card-body\" style=\"margin-top: -1em;\">\n\n                <form (ngSubmit)=\"onSubmit(seedForm)\" #seedForm=\"ngForm\">\n                  <fieldset class=\"uk-fieldset\">\n                    <div class=\"uk-margin\">\n                      <input class=\"uk-input\" type=\"text\" name=\"title\" required minlength=\"3\" placeholder=\"Un título interesante\" [(ngModel)]=\"model_seed.title\"\n                        #title=\"ngModel\" [ngClass]=\"{'uk-form-danger': title.errors && title.touched}\">\n                    </div>\n                    <div class=\"uk-margin\">\n                      <textarea class=\"uk-textarea\" name=\"text\" placeholder=\"Texto (opcional)\" [(ngModel)]=\"model_seed.text\" #text=\"ngModel\"></textarea>\n                    </div>\n                    <div class=\"uk-margin\">\n                      <input class=\"uk-input\" type=\"text\" name=\"image\" placeholder=\"URL Imagen (opcional)\" [(ngModel)]=\"model_seed.image\" #image=\"ngModel\">\n                    </div>\n\n                    <div class=\"uk-margin\">\n                      <file-upload (pathsEvent)=\"receptor($event)\"></file-upload>\n                    </div>\n\n                    <br/>\n                    <hr/>\n                    <div class=\"uk-margin uk-text-right\">\n                      <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">Cancelar</button>\n                      <button type=\"submit\" [disabled]=\"!seedForm.form.valid\" class=\"uk-button uk-button-primary\">\n                        Publicar\n                      </button>\n                    </div>\n                  </fieldset>\n                </form>\n\n              </div>\n\n\n              <div *ngIf=\"posteado\" class=\"uk-card-body\">\n                <div class=\"uk-margin uk-text-center\">\n                  <button class=\"uk-button uk-button-default uk-modal-close\" type=\"button\">Listo</button>\n                </div>\n              </div>\n\n            </div>\n\n\n          </div>\n          <div class=\"uk-width-1-4@m\"></div>\n        </div>\n      </div>\n    </div>\n  </div>\n\n\n\n\n\n\n\n\n\n\n\n\n\n  <div uk-grid>\n    <div class=\"uk-width-1-3@m\"></div>\n    <div class=\"uk-width-1-3@m\">\n      <div id=\"logo_black\"></div>\n    </div>\n    <div class=\"uk-width-1-3@m\"></div>\n  </div>\n\n\n\n\n\n\n  <div uk-grid>\n    <div class=\"uk-width-1-6@m\"></div>\n    <div class=\"uk-width-expand@m\">\n      <div style=\"position: relative;\">\n\n\n\n\n\n        <h1 style=\" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);\">Social</h1>\n\n        <div *ngIf=\"auth.author | async\">\n          <a style=\"text-decoration: none;\" href=\"#modal-full\" uk-toggle (click)=\"posteado = false\">\n            <h1>\n              <i class=\"icon ion-md-add\" style=\"font-size: 75px; position: absolute; top: 0em; right: 1em;\"></i>\n            </h1>\n          </a>\n        </div>\n\n        <hr/>\n\n        <br/>\n        <br/>\n\n        <div uk-grid>\n\n\n          <div class=\"uk-width-1-1\" *ngFor=\"let seed of seeds | async; let i = index\">\n\n\n\n            <article class=\"uk-comment uk-comment-primary\" style=\"padding-left: 5em; position: relative;  background-color: white; border-radius: 0.5em;\">\n\n\n              <div *ngIf=\"auth.author | async; then authenticated else guest\"></div>\n\n              <ng-template #authenticated>\n                <div *ngIf=\"auth.author | async as author\">\n                  <span *ngIf=\"author.rol == 'admin'\" (click)=\"delete(seed.id)\" style=\"font-size: 35px; position: absolute; top: 25px; right: 25px;\"\n                    uk-icon=\"icon: minus-circle; ratio: 1.5\"></span>\n                </div>\n\n                <i (click)=\"seed.ups = seed.ups + 1; update(seed)\" class=\"icon ion-ios-arrow-up\" style=\"font-size: 35px; position: absolute; top: 15px; left: 15px;\"></i>\n\n                <p style=\"font-size: 18px; position: absolute; top: 35px; left: 20px;\">{{seed.ups}}</p>\n\n                <i (click)=\"seed.ups = seed.ups - 1; update(seed)\" class=\"icon ion-ios-arrow-down\" style=\"font-size: 35px; position: absolute; top: 75px; left: 15px;\"></i>\n              </ng-template>\n\n\n              <ng-template #guest>\n                <div *ngIf=\"intenta_votar\">\n                  <a (click)=\"auth.google_login()\">\n                    <h1 style=\" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgb(167, 167, 167);\">\n                      <i class=\"icon ion-logo-googleplus\" style=\"font-size: 35px;\"></i> &nbsp; Registrate para votar\n                    </h1>\n                  </a>\n                </div>\n                <i (click)=\"update(seed)\" class=\"icon ion-ios-arrow-up\" style=\"font-size: 35px; position: absolute; top: 15px; left: 15px;\"></i>\n                <p style=\"font-size: 18px; position: absolute; top: 35px; left: 20px;\">{{seed.ups}}</p>\n                <i (click)=\"update(seed)\" class=\"icon ion-ios-arrow-down\" style=\"font-size: 35px; position: absolute; top: 75px; left: 15px;\"></i>\n              </ng-template>\n\n\n\n\n\n\n\n\n              <header class=\"uk-comment-header uk-grid-medium uk-flex-middle\" uk-grid>\n                <div class=\"uk-width-auto\">\n                  <img class=\"uk-comment-avatar\" [src]=\"seed.author_image\" width=\"80\" height=\"80\" alt=\"\">\n                </div>\n                <div class=\"uk-width-expand\">\n                  <h4 class=\"uk-comment-title uk-margin-remove\">\n                    <a class=\"uk-link-reset\">{{seed.author}}</a>\n                  </h4>\n                  <ul class=\"uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top\">\n                    <li>\n                      <a>{{seed.date | date}}</a>\n                    </li>\n                    <li>\n                      <a routerLink=\"/social/posts/{{seed.id}}\">{{seed.replies.length}} &nbsp; Comentarios</a>\n                    </li>\n                  </ul>\n                </div>\n              </header>\n\n\n              <div class=\"uk-comment-body\">\n                <p>\n                  {{seed.title}}\n                </p>\n\n                <img *ngIf=\"seed.image != '' && seed.image \" [src]=\"seed.image\" height=\"auto\" width=\"100%\">\n\n\n\n                <div *ngIf=\"seed.photoURL\">\n\n\n                    <div class=\"uk-position-relative uk-visible-toggle uk-dark\" uk-slideshow>\n\n                        <ul class=\"uk-slideshow-items\">\n                            <li *ngFor=\"let im of seed.photoURL\">\n                                <img data-src=\"{{im | urlpipe | async}}\" width=\"1800\" height=\"1200\" alt=\"\" uk-cover uk-img=\"target: !ul > :last-child, !* +*\">\n                            </li>\n                            \n                        </ul>\n                    \n                        <a class=\"uk-position-center-left uk-padding\" href=\"#\" uk-slideshow-item=\"previous\">\n                            <i class=\"icon ion-ios-arrow-back\" style=\"font-size: 45px;\"></i>\n                        </a>\n                        <a class=\"uk-position-center-right uk-padding\" href=\"#\" uk-slideshow-item=\"next\">\n                            <i class=\"icon ion-ios-arrow-forward\" style=\"font-size: 45px;\"></i>\n                        </a>\n                    \n                    </div>\n\n\n                </div>\n\n\n              </div>\n\n\n            </article>\n          </div>\n\n\n\n\n          <div *ngIf=\"!(seeds | async)\">\n            Cargando...\n          </div>\n\n\n\n\n        </div>\n\n\n      </div>\n    </div>\n    <div class=\"uk-width-1-6@m\"></div>\n  </div>\n\n\n\n\n\n\n  <div id=\"nbsp-inline\">\n    &nbsp;\n  </div>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</div>\n"
 
 /***/ }),
 
@@ -1013,6 +1156,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _services_authors_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../services/authors.service */ "./src/app/services/authors.service.ts");
+/* harmony import */ var _node_modules_angularfire2_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../node_modules/angularfire2/storage */ "./node_modules/angularfire2/storage/index.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1027,13 +1171,15 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var SocialComponent = /** @class */ (function () {
-    function SocialComponent(social_servicce, route, location, auth) {
+    function SocialComponent(social_servicce, route, location, auth, storage) {
         var _this = this;
         this.social_servicce = social_servicce;
         this.route = route;
         this.location = location;
         this.auth = auth;
+        this.storage = storage;
         this.model_seed = {};
         this.posteado = false;
         if (this.auth.author) {
@@ -1062,10 +1208,19 @@ var SocialComponent = /** @class */ (function () {
             value.date = '' + new Date().toLocaleString();
             value.replies = [];
             value.ups = 0;
+            value.photoURL = [];
+            this.paths.forEach(function (x) {
+                if (x !== undefined) {
+                    value.photoURL.push(x);
+                }
+            });
             this.social_servicce.post_seed(value);
             this.posteado = !this.posteado;
             this.form.reset();
         }
+    };
+    SocialComponent.prototype.receptor = function ($event) {
+        this.paths = $event;
     };
     SocialComponent.prototype.update = function (x) {
         this.intenta_votar = true;
@@ -1091,9 +1246,179 @@ var SocialComponent = /** @class */ (function () {
         __metadata("design:paramtypes", [_services_social_service__WEBPACK_IMPORTED_MODULE_1__["SocialService"],
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
             _angular_common__WEBPACK_IMPORTED_MODULE_3__["Location"],
-            _services_authors_service__WEBPACK_IMPORTED_MODULE_4__["AuthorsService"]])
+            _services_authors_service__WEBPACK_IMPORTED_MODULE_4__["AuthorsService"],
+            _node_modules_angularfire2_storage__WEBPACK_IMPORTED_MODULE_5__["AngularFireStorage"]])
     ], SocialComponent);
     return SocialComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/directives/drop-zone.directive.ts":
+/*!***************************************************!*\
+  !*** ./src/app/directives/drop-zone.directive.ts ***!
+  \***************************************************/
+/*! exports provided: DropZoneDirective */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DropZoneDirective", function() { return DropZoneDirective; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+// selector: '[appDropZone]'
+
+var DropZoneDirective = /** @class */ (function () {
+    function DropZoneDirective() {
+        this.dropped = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+        this.hovered = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
+    }
+    DropZoneDirective.prototype.onDrop = function ($event) {
+        $event.preventDefault();
+        this.dropped.emit($event.dataTransfer.files);
+        this.hovered.emit(false);
+    };
+    DropZoneDirective.prototype.onDragOver = function ($event) {
+        $event.preventDefault();
+        this.hovered.emit(true);
+    };
+    DropZoneDirective.prototype.onDragLeave = function ($event) {
+        $event.preventDefault();
+        this.hovered.emit(false);
+    };
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", Object)
+    ], DropZoneDirective.prototype, "dropped", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Output"])(),
+        __metadata("design:type", Object)
+    ], DropZoneDirective.prototype, "hovered", void 0);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["HostListener"])('drop', ['$event']),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], DropZoneDirective.prototype, "onDrop", null);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["HostListener"])('dragover', ['$event']),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], DropZoneDirective.prototype, "onDragOver", null);
+    __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["HostListener"])('dragleave', ['$event']),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object]),
+        __metadata("design:returntype", void 0)
+    ], DropZoneDirective.prototype, "onDragLeave", null);
+    DropZoneDirective = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Directive"])({
+            selector: '[dropZone]'
+        }),
+        __metadata("design:paramtypes", [])
+    ], DropZoneDirective);
+    return DropZoneDirective;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pipes/file-size.pipe.ts":
+/*!*****************************************!*\
+  !*** ./src/app/pipes/file-size.pipe.ts ***!
+  \*****************************************/
+/*! exports provided: FileSizePipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FileSizePipe", function() { return FileSizePipe; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var FILE_SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+var FILE_SIZE_UNITS_LONG = ['Bytes', 'Kilobytes', 'Megabytes', 'Gigabytes', 'Pettabytes', 'Exabytes', 'Zettabytes', 'Yottabytes'];
+var FileSizePipe = /** @class */ (function () {
+    function FileSizePipe() {
+    }
+    FileSizePipe.prototype.transform = function (sizeInBytes, longForm) {
+        var units = longForm
+            ? FILE_SIZE_UNITS_LONG
+            : FILE_SIZE_UNITS;
+        var power = Math.round(Math.log(sizeInBytes) / Math.log(1024));
+        power = Math.min(power, units.length - 1);
+        var size = sizeInBytes / Math.pow(1024, power); // size in new units
+        var formattedSize = Math.round(size * 100) / 100; // keep up to 2 decimals
+        var unit = units[power];
+        return size ? formattedSize + " " + unit : '0';
+    };
+    FileSizePipe = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({
+            name: 'fileSize'
+        })
+    ], FileSizePipe);
+    return FileSizePipe;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/pipes/urlpipe.pipe.ts":
+/*!***************************************!*\
+  !*** ./src/app/pipes/urlpipe.pipe.ts ***!
+  \***************************************/
+/*! exports provided: UrlpipePipe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UrlpipePipe", function() { return UrlpipePipe; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _node_modules_angularfire2_storage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../node_modules/angularfire2/storage */ "./node_modules/angularfire2/storage/index.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var UrlpipePipe = /** @class */ (function () {
+    function UrlpipePipe(storage) {
+        this.storage = storage;
+    }
+    UrlpipePipe.prototype.transform = function (value, args) {
+        var x = this.storage.ref(value).getDownloadURL();
+        return x;
+    };
+    UrlpipePipe = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Pipe"])({
+            name: 'urlpipe'
+        }),
+        __metadata("design:paramtypes", [_node_modules_angularfire2_storage__WEBPACK_IMPORTED_MODULE_1__["AngularFireStorage"]])
+    ], UrlpipePipe);
+    return UrlpipePipe;
 }());
 
 

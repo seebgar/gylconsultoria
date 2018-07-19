@@ -25,6 +25,10 @@ import { AuthorsService } from './services/authors.service';
 import { PublicationsService } from './services/publications.service';
 import { SocialService } from './services/social.service';
 import { SeedComponent } from './components/seed/seed.component';
+import { DropZoneDirective } from './directives/drop-zone.directive';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { FileSizePipe } from './pipes/file-size.pipe';
+import { UrlpipePipe } from './pipes/urlpipe.pipe';
 
 @NgModule({
   declarations: [
@@ -37,7 +41,11 @@ import { SeedComponent } from './components/seed/seed.component';
     ForoComponent,
     PublicacionComponent,
     SocialComponent,
-    SeedComponent
+    SeedComponent,
+    DropZoneDirective,
+    FileUploadComponent,
+    FileSizePipe,
+    UrlpipePipe
   ],
   imports: [
     BrowserModule,

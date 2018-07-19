@@ -10,4 +10,5 @@ export interface Seed {
     title?: string;
     ups?: number;
     replies?: Reply[]; 
+    photoURL?:string[];
 }
