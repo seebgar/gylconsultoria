@@ -78,7 +78,7 @@
 
 
 
-        <h1 style=" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);">{{(publication | async)?.title}}</h1>
+        <h1 class="portafolio-title foro-pub-title">{{(publication | async)?.title}}</h1>
 
         <div *ngIf="auth.author | async as author">
           <a *ngIf="author.rol === 'admin'" (click)="publicado_post = false" href="#modal-post-post" uk-toggle>
@@ -153,8 +153,8 @@
 
 
 
-            <div id="modal-full-{{i}}" class="uk-modal-full" uk-modal>
-              <div class="uk-modal-dialog" style="min-height: 100vh;">
+            <div id="modal-full-{{i}}" class="uk-modal-full" uk-modal  >
+              <div class="uk-modal-dialog foro-entrada-visual" style="min-height: 100vh;">
 
 
                 <div style="padding-top: 5em;">
@@ -170,7 +170,7 @@
 
 
 
-                        <h1 style=" font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);">{{post.title}}</h1>
+                        <h1 class="portafolio-title">{{post.title}}</h1>
                         <hr/>
 
                         <br/>

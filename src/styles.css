@@ -1,14 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
-
 p {
-    font-size: 22px; color: rgb(83, 83, 83)
+  font-size: 22px;
+  color: rgb(83, 83, 83)
 }
 
-
-
 #home_base {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65) ), url(resources/back_2.jpg);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url(resources/back_2.jpg);
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
@@ -17,42 +15,130 @@ p {
 }
 
 #logo {
-    background-image: url(resources/logo.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    height: 410px;
-    width: auto;
+  background-image: url(resources/logo.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  height: 410px;
+  width: auto;
 }
 
 #logo_black {
-    background-image: url(resources/Logo_2018_black.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    height: 400px;
-    width: auto;
+  background-image: url(resources/Logo_2018_black.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  height: 400px;
+  width: auto;
 }
 
 #asociadp_1 {
-    background-image: url(resources/cah.png);
-    background-position: top;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 250px;
-    width: 250px;
-    border-radius: 125px;
+  background-image: url(resources/cah.png);
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 250px;
+  width: 250px;
+  border-radius: 125px;
 }
 
-@media (min-width: 800px) {
+#vision {
+  padding: 4.5em 3em 4.5em 0em;
+}
+
+#mision,
+#mision-parent {
+  padding: 3em;
+  background-color: white;
+  border-radius: 3em
+}
+
+#vision-parent {
+  background-color: white;
+  border-radius: 0 3em 3em 0
+}
+
+.portafolio-title {
+    font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);
+}
+
+#portafolio {
+    background-color: white; border-radius: 3em; margin-top: 8em; margin-bottom: 10em;
+}
+
+#contact-page {
+    background-color: white; border-radius: 3em 3em 0 0; min-height: 100vh;
+}
+
+
+/* MOBILES */
+@media (max-width: 950px) {
+    #contact-page {
+        background-color: white; border-radius: 0; min-height: 100vh;
+    }
+    .foro-entrada-visual {
+        padding: 2em;
+        word-wrap: break-word;
+    }
+    .social-seed-icon {
+        margin: 0 -2em;
+    }
+    #home_base {
+        background-attachment: fixed;
+        height: 100%;
+    }
+    .portafolio-title {
+        font-family: 'Roboto'; font-size: 30px; font-weight: 300; color: rgb(167, 167, 167);
+    }
+    #portafolio {
+        background-color: white; border-radius: 0em; margin-top: 8em;
+    }
+  #logo,
+  #logo_black {
+    width: 80%;
+    height: auto;
+    padding: 2em;
+    margin: 5em 0em;
+  }
+  #correo-home {
+    width: 100%;
+    height: auto;
+    word-wrap: break-word;
+  }
+ 
+  #mision-parent {
+    padding: 0em 2em;
+    border-radius: 0em;
+  }
+  #vision,
+  #mision {
+    padding: 3em;
+    border-radius: 0;
+    background-color: white;
+  }
+  #nbsp-inline {
+    height: 8vh;
+  }
+}
+
+
+/* DESKTOP */
+@media (min-width: 951px) {
+    #close-menu-x {
+        margin-top: 8em;
+    }
+    .contact-items {
+      font-size: 30px
+    }
     #nbsp {
-        height: 20vh;;
+      height: 20vh;
+      ;
     }
     #nbsp-inline {
-        height: 15vh;
+      height: 15vh;
     }
     #nbspasociados {
-        height: 15vh;;
+      height: 15vh;
+      ;
     }
-}
-
+  }
