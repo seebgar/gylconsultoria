@@ -29,11 +29,37 @@
 
         <ng-template #authenticated>
           <div *ngIf="auth.author | async as author">
-            <p>{{author.displayName}}</p>
+
             <img class="uk-comment-avatar" style="margin-top: -1em;" src="{{author.photoURL}}" width="60" height="auto" alt="">
+
             <br/>
+            <button class="uk-button uk-button-text" type="button">{{author.displayName}}</button>
+
+            <div uk-drop="animation: uk-animation-slide-top-small; duration: 1000; mode: click">
+              <div class="uk-padding" style="height: 250px; overflow: scroll; background-color: white">
+                <ul>
+                  <li *ngFor="let icon of icons">
+                    <a (click)="update_icon(icon)">
+                      <img [src]="icon" width="80" height="80">
+                      <br/>
+                      <br/>
+                      <br/>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <br/>
+            <br/>
+
+
             <button (click)="auth.logout()" class="uk-button uk-button-text" style="margin-top: -1em;">Salir</button>
+
+
             <br/>
+            <br/>
+
           </div>
         </ng-template>
 
@@ -50,7 +76,7 @@
 
 
         <li class="uk-nav-divider"></li>
-        
+
 
         <li class="uk-nav-header">MENU</li>
         <li routerLink="/home" uk-toggle="target: #offcanvas-nav-primary">
@@ -64,7 +90,7 @@
         </li>
 
         <li routerLink="/social" uk-toggle="target: #offcanvas-nav-primary">
-          <a>Social</a>
+          <a>Blog</a>
         </li>
         <li routerLink="/foro" href="#" uk-toggle="target: #offcanvas-nav-primary">
           <a>Foro</a>
