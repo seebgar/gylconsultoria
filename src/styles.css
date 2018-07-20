@@ -59,40 +59,64 @@ p {
 }
 
 .portafolio-title {
-    font-family: 'Roboto'; font-size: 60px; font-weight: 300; color: rgb(167, 167, 167);
+  font-family: 'Roboto';
+  font-size: 60px;
+  font-weight: 300;
+  color: rgb(167, 167, 167);
 }
 
 #portafolio {
-    background-color: white; border-radius: 3em; margin-top: 8em; margin-bottom: 10em;
+  background-color: white;
+  border-radius: 3em;
+  margin-top: 8em;
+  margin-bottom: 10em;
 }
 
 #contact-page {
-    background-color: white; border-radius: 3em 3em 0 0; min-height: 100vh;
+  background-color: white;
+  border-radius: 3em 3em 0 0;
+  min-height: 100vh;
 }
 
+#vision-side,
+#asociados_side {
+  background-color: white;
+}
+
+#asociados_card {
+  background-color: white; border-radius: 3em 0em 0em 3em;
+}
 
 /* MOBILES */
+
 @media (max-width: 950px) {
-    #contact-page {
-        background-color: white; border-radius: 0; min-height: 100vh;
-    }
-    .foro-entrada-visual {
-        padding: 2em;
-        word-wrap: break-word;
-    }
-    .social-seed-icon {
-        margin: 0 -2em;
-    }
-    #home_base {
-        background-attachment: fixed;
-        height: 100%;
-    }
-    .portafolio-title {
-        font-family: 'Roboto'; font-size: 30px; font-weight: 300; color: rgb(167, 167, 167);
-    }
-    #portafolio {
-        background-color: white; border-radius: 0em; margin-top: 8em;
-    }
+  #contact-page {
+    background-color: white;
+    border-radius: 0;
+    min-height: 100vh;
+  }
+  .foro-entrada-visual {
+    padding: 2em;
+    word-wrap: break-word;
+  }
+  .social-seed-icon {
+    margin: 0 -2em;
+  }
+  #home_base {
+    background-attachment: fixed;
+    height: 100%;
+  }
+  .portafolio-title {
+    font-family: 'Roboto';
+    font-size: 30px;
+    font-weight: 300;
+    color: rgb(167, 167, 167);
+  }
+  #portafolio {
+    background-color: white;
+    border-radius: 0em;
+    margin-top: 8em;
+  }
   #logo,
   #logo_black {
     width: 80%;
@@ -105,7 +129,6 @@ p {
     height: auto;
     word-wrap: break-word;
   }
- 
   #mision-parent {
     padding: 0em 2em;
     border-radius: 0em;
@@ -121,24 +144,54 @@ p {
   }
 }
 
-
 /* DESKTOP */
+
 @media (min-width: 951px) {
-    #close-menu-x {
-        margin-top: 8em;
-    }
-    .contact-items {
-      font-size: 30px
-    }
-    #nbsp {
-      height: 20vh;
-      ;
-    }
-    #nbsp-inline {
-      height: 15vh;
-    }
-    #nbspasociados {
-      height: 15vh;
-      ;
-    }
+  #close-menu-x {
+    margin-top: 8em;
   }
+  .contact-items {
+    font-size: 30px
+  }
+  #nbsp {
+    height: 20vh;
+    ;
+  }
+  #nbsp-inline {
+    height: 15vh;
+  }
+  #nbspasociados {
+    height: 15vh;
+    ;
+  }
+}
+
+/* WIDE SCREEN */
+
+@media (min-width: 1800px) {
+  #vision-side {
+    background-color: rgba(255, 255, 255, 0);
+  }
+  #vision-parent {
+    border-radius: 3em;
+    max-width: 400;
+  }
+  #vision,
+  #mision {
+    padding: 3em;
+    border-radius: 3em;
+    background-color: white;
+  }
+  #mision{
+    padding: 3em 10em;
+  }
+  #mision-parent {
+    max-width: 800;
+  }
+  #asociados_side {
+    background-color: rgba(240, 248, 255, 0);
+  }
+  #asociados_card {
+    border-radius: 3em;
+  }
+}

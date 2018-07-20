@@ -35,12 +35,13 @@
                 <option value="na">Solo Texto</option>
                 <option value="img">Imagen</option>
                 <option value="pdf">Documento PDF</option>
+                <option value="pdf">Documento Word / Excel / PowerPoint etc...</option>
               </select>
             </div>
 
             <div class="uk-margin" [style.display]=" doc === 'na' ? 'none' : 'block' ">
               <input [(ngModel)]="pub_model.image" #image="ngModel" name="image" [ngClass]="{'uk-form-danger': image.errors && image.touched}"
-                class="uk-input" type="text" [placeholder]=" doc === 'img' ? 'URL Imagen documento' : 'URL Documento PDF, se puede obtener al subir el archivo a Google Drive'">
+                class="uk-input" type="text" [placeholder]=" doc === 'img' ? 'URL Imagen documento' : 'URL Documento, se puede obtener al subir el archivo a Google Drive'">
             </div>
 
             <br/>
@@ -185,7 +186,7 @@
                           <p class="uk-article-meta">Publicado por Carlos Humberto Garcia {{post.date}}
                           </p>
 
-                          <p *ngIf="!editmode" class="uk-text-lead" style="white-space: pre-wrap;">
+                          <p *ngIf="!editmode" class="uk-text-lead" style="white-space: pre-wrap; word-wrap: break-word; max-width: 800;">
                             {{post.text}}
                           </p>
 
@@ -217,6 +218,7 @@
 
 
                           <div *ngIf="post.type === 'pdf'">
+                            <p><a href="{{post.pdf}}" target="_blank">Abre el archivo aquí</a> </p>
                             <embed [src]="post.pdf" width="800" height="1000px" />
                           </div>
 
@@ -332,7 +334,7 @@
 
 
           <div *ngIf="!(publication | async)">
-            <h1 style=" font-family: 'Roboto'; font-size: 20px; font-weight: 300; color: rgba(167, 167, 167, 0.534);">Cragando...</h1>
+            <span style="background-color: rgba(255, 255, 255, 0)" class="uk-margin-left" uk-spinner="ratio: 4.5"></span>
           </div>
 
         </div>
@@ -362,3 +364,6 @@
 
 
 </div>
+
+
+
