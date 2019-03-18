@@ -20,8 +20,8 @@
 
 > para publicar la pagina, en comando:
 
-git add --all
-git commit -m "un mensaje"
-git push 
+git add --all <br/>
+git commit -m "un mensaje" <br/>
+git push  <br/>
 
 > esperar como 1 hora para ver lo cambios reflejados publicamente
