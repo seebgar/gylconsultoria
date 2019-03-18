@@ -6,7 +6,7 @@
 
 > clonar el repositorio (este) https://github.com/seebgar/gylconsultoria.git
 
-> en CMD o Terminal o Comando ir a la raiz del proyecto
+> en CMD o Terminal o Comando ir a la raiz del proyecto. (posiblemente sacara un error, se soluciona con ng audit fix, o el comando que diga al final del error en comando.
 
 $ npm install <br/>
 
@@ -20,6 +20,7 @@ $ ng serve -o <br/>
 
 > para publicar la pagina, en comando:
 
+$ ng build
 $ git add --all <br/>
 $ git commit -m "un mensaje" <br/>
 $ git push  <br/>
