@@ -26,3 +26,8 @@ $ git commit -m "un mensaje" <br/>
 $ git push  <br/>
 
 > esperar como 1 hora para ver lo cambios reflejados publicamente
+
+<br/>
+<br/>
+
+> NOTA: Si el comando NG no es reconocido, es porque falta instalar ANGULAR CLI https://cli.angular.io
