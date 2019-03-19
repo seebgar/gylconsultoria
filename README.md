@@ -6,22 +6,28 @@
 
 > clonar el repositorio (este) https://github.com/seebgar/gylconsultoria.git
 
-> en CMD o Terminal o Comando ir a la raiz del proyecto
+> en CMD o Terminal o Comando ir a la raiz del proyecto. (posiblemente sacara un error, se soluciona con ng audit fix, o el comando que diga al final del error en comando.
 
-> npm install
+$ npm install <br/>
 
 > luego dentro del proyecto está el SLIDER de fotos en src/app/components/home/ archivo html
 
 > para ver los cambios en tiempo real, localmente correr en comando
 
-> ng serve -o
+$ ng serve -o <br/>
 
 > si se quiere buscar ostros estilos de slide de fotos: https://getuikit.com/docs/slider
 
 > para publicar la pagina, en comando:
 
-git add --all
-git commit -m "un mensaje"
-git push 
+$ ng build
+$ git add --all <br/>
+$ git commit -m "un mensaje" <br/>
+$ git push  <br/>
 
 > esperar como 1 hora para ver lo cambios reflejados publicamente
+
+<br/>
+<br/>
+
+> NOTA: Si el comando NG no es reconocido, es porque falta instalar ANGULAR CLI https://cli.angular.io
