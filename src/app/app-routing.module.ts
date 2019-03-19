@@ -10,6 +10,7 @@ import { ForoComponent } from './components/foro/foro.component';
 import { PublicacionComponent } from './components/publicacion/publicacion.component';
 import { SocialComponent } from './components/social/social.component';
 import { SeedComponent } from './components/seed/seed.component';
+import { EventosComponent } from './components/eventos/eventos.component';
 
 
 const routes: Routes = [
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'foro/publicaciones/:id', component: PublicacionComponent, data: { state: 'publicacion' } },
   { path: 'social', component: SocialComponent, data: { state: 'social' } },
   { path: 'social/posts/:id', component: SeedComponent, data: { state: 'seed' } },
+  { path: 'eventos', component: EventosComponent, data: { state: 'eventos' } },
   
  // { path: '**', component: HomeComponent },
 ];

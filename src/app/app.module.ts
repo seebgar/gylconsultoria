@@ -29,6 +29,7 @@ import { DropZoneDirective } from './directives/drop-zone.directive';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 import { FileSizePipe } from './pipes/file-size.pipe';
 import { UrlpipePipe } from './pipes/urlpipe.pipe';
+import { EventosComponent } from './components/eventos/eventos.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { UrlpipePipe } from './pipes/urlpipe.pipe';
     DropZoneDirective,
     FileUploadComponent,
     FileSizePipe,
-    UrlpipePipe
+    UrlpipePipe,
+    EventosComponent
   ],
   imports: [
     BrowserModule,

@@ -19,7 +19,7 @@ p {
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  height: 410px;
+  height: 200px;
   width: auto;
 }
 
@@ -34,6 +34,16 @@ p {
 
 #asociadp_1 {
   background-image: url(resources/cah.png);
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 250px;
+  width: 250px;
+  border-radius: 125px;
+}
+
+#asociadp_2 {
+  background-image: url(resources/mantilla.png);
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
